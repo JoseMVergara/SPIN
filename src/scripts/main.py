@@ -1,5 +1,9 @@
 import ipywidgets as wg
 import sys
+sys.path.append('./src/scripts/')
+sys.path.append('./src/scripts/calculators/siesta')
+sys.path.append('./src/scripts/calculators/vasp')
+sys.path.append('./src/images/')
 sys.path.append('./scripts/')
 sys.path.append('./scripts/calculators/siesta')
 sys.path.append('./scripts/calculators/vasp')
@@ -75,7 +79,7 @@ class Spin(Siesta):
             self.structure_label = 'Structure'
 
         self.create_parameter_tabs()
-        logo = get_calculator_logo("./images/spin_logo.png", "png")
+        logo = get_calculator_logo("./src/images/spin_logo.png", "png")
         display(logo)
         display(self.supported_calculators)
 
@@ -161,7 +165,7 @@ class Spin(Siesta):
         
         with self.structure_parameters:
             clear_output(True)
-            logo = get_calculator_logo("./images/spin_logo.png", "png")
+            logo = get_calculator_logo("./src/images/spin_logo.png", "png")
             display(logo)
             display(self.geometric_structure_box)
             
@@ -220,7 +224,7 @@ class Spin(Siesta):
 
     def load_saved_structures(self):
         
-        list_calculations = os.listdir('../calculations/')
+        list_calculations = os.listdir('./calculations/')
     
         if len(list_calculations) == 0:
             self.created_structures_list = create_dropdown_input(['None'],'None','')
@@ -233,7 +237,7 @@ class Spin(Siesta):
                             )
         
         load_button = create_expanded_button('Load structure','success')
-        self.job_load_folder = FileChooser('../calculations/')#,layout=Layout(height='200px', width='500px'))
+        self.job_load_folder = FileChooser('./calculations/')#,layout=Layout(height='200px', width='500px'))
         self.job_load_folder.default_filename = ' '
         self.update_job_load_folder_button = create_expanded_button('Update','primary')
         self.update_job_load_folder_button.on_click(self.list_available_structures)
@@ -261,7 +265,7 @@ class Spin(Siesta):
         try:
             folder = self.job_load_folder.value.split('/ ')[0]
         except:
-            folder = '../calculations'
+            folder = './calculations'
         label = self.created_structures_list.value
         structure_directory = f'{folder}/{label}/structure/'
 
@@ -367,7 +371,7 @@ class Spin(Siesta):
             create_structure_button.on_click(self.create_structure_manually)
             with self.structure_parameters:
                 clear_output(True)
-                logo = get_calculator_logo("./images/spin_logo.png", "png")
+                logo = get_calculator_logo("./src/images/spin_logo.png", "png")
                 display(logo)
                 display(self.geometric_structure_box)
                 display(self.structure_label_input)
@@ -773,7 +777,7 @@ class Spin(Siesta):
         
         with self.structure_parameters:
             clear_output(True)
-            logo = get_calculator_logo("./images/spin_logo.png", "png")
+            logo = get_calculator_logo("./src/images/spin_logo.png", "png")
             display(logo)
             display(self.structure_label_input)
             display(self.geometric_structure_box)
@@ -980,7 +984,7 @@ class Spin(Siesta):
             
             with self.structure_parameters:
                 clear_output(True)
-                logo = get_calculator_logo("./images/spin_logo.png", "png")
+                logo = get_calculator_logo("./src/images/spin_logo.png", "png")
                 display(logo)
                 display(self.geometric_structure_box)
                 display(self.structure_label_input)
@@ -1005,7 +1009,7 @@ class Calculations(Spin):
         display calculations blocks
         """
         self.create_run_tabs()
-        logo = get_calculator_logo("./images/spin_logo.png", "png")
+        logo = get_calculator_logo("./src/images/spin_logo.png", "png")
         display(logo)
         display(self.supported_runs)
 

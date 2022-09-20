@@ -1,0 +1,1 @@
+{"siesta_label": "CH3CH2O", "relax_structure": true, "bands": false, "dos": false, "optical": false, "relax_structure_inputs": "\nMD.NumCGsteps 200\n MD.VariableCell .True.\n MD.TypeOfRun FIRE\n MD.MaxForceTol 0.04\n", "bands_inputs": null, "dos_inputs": null, "opt_inputs": null, "pseudopotentials": ["C-gga.psf", "O-gga.psf", "H-gga.psf"]}

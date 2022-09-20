@@ -1,0 +1,62 @@
+Neighbors of:     1 C-gga at:   1.9467 -1.1057  0.0000
+    7 H-gga                 1.1123  Ang. Really at:   1.7027 -2.3099  1.7054
+    8 H-gga                 1.1123  Ang. Really at:   1.7027 -2.3099 -1.7054
+    6 H-gga                 1.1138  Ang. Really at:   3.8891 -0.2947  0.0000
+    2 C-gga                 1.5466  Ang. Really at:  -0.0671  1.0124  0.0000
+    5 H-gga                 2.2066  Ang. Really at:   0.2512  2.3100 -1.6872
+    4 H-gga                 2.2066  Ang. Really at:   0.2512  2.3100  1.6872
+    3 O-gga                 2.4304  Ang. Really at:  -2.4712  0.1495 -0.0000
+Neighbors of:     2 C-gga at:  -0.0671  1.0124  0.0000
+    5 H-gga                 1.1389  Ang. Really at:   0.2512  2.3100 -1.6872
+    4 H-gga                 1.1389  Ang. Really at:   0.2512  2.3100  1.6872
+    3 O-gga                 1.3516  Ang. Really at:  -2.4712  0.1495 -0.0000
+    1 C-gga                 1.5466  Ang. Really at:   1.9467 -1.1057  0.0000
+    7 H-gga                 2.1869  Ang. Really at:   1.7027 -2.3099  1.7054
+    8 H-gga                 2.1869  Ang. Really at:   1.7027 -2.3099 -1.7054
+    6 H-gga                 2.2048  Ang. Really at:   3.8891 -0.2947  0.0000
+Neighbors of:     3 O-gga at:  -2.4712  0.1495 -0.0000
+    2 C-gga                 1.3516  Ang. Really at:  -0.0671  1.0124  0.0000
+    5 H-gga                 2.0444  Ang. Really at:   0.2512  2.3100 -1.6872
+    4 H-gga                 2.0444  Ang. Really at:   0.2512  2.3100  1.6872
+    1 C-gga                 2.4304  Ang. Really at:   1.9467 -1.1057  0.0000
+    7 H-gga                 2.7179  Ang. Really at:   1.7027 -2.3099  1.7054
+    8 H-gga                 2.7179  Ang. Really at:   1.7027 -2.3099 -1.7054
+Neighbors of:     4 H-gga at:   0.2512  2.3100  1.6872
+    2 C-gga                 1.1389  Ang. Really at:  -0.0671  1.0124  0.0000
+    5 H-gga                 1.7856  Ang. Really at:   0.2512  2.3100 -1.6872
+    3 O-gga                 2.0444  Ang. Really at:  -2.4712  0.1495 -0.0000
+    1 C-gga                 2.2066  Ang. Really at:   1.9467 -1.1057  0.0000
+    6 H-gga                 2.5304  Ang. Really at:   3.8891 -0.2947  0.0000
+    7 H-gga                 2.5626  Ang. Really at:   1.7027 -2.3099  1.7054
+    8 H-gga                 3.1289  Ang. Really at:   1.7027 -2.3099 -1.7054
+Neighbors of:     5 H-gga at:   0.2512  2.3100 -1.6872
+    2 C-gga                 1.1389  Ang. Really at:  -0.0671  1.0124  0.0000
+    4 H-gga                 1.7856  Ang. Really at:   0.2512  2.3100  1.6872
+    3 O-gga                 2.0444  Ang. Really at:  -2.4712  0.1495 -0.0000
+    1 C-gga                 2.2066  Ang. Really at:   1.9467 -1.1057  0.0000
+    6 H-gga                 2.5304  Ang. Really at:   3.8891 -0.2947  0.0000
+    8 H-gga                 2.5626  Ang. Really at:   1.7027 -2.3099 -1.7054
+    7 H-gga                 3.1289  Ang. Really at:   1.7027 -2.3099  1.7054
+Neighbors of:     6 H-gga at:   3.8891 -0.2947  0.0000
+    1 C-gga                 1.1138  Ang. Really at:   1.9467 -1.1057  0.0000
+    7 H-gga                 1.8139  Ang. Really at:   1.7027 -2.3099  1.7054
+    8 H-gga                 1.8139  Ang. Really at:   1.7027 -2.3099 -1.7054
+    2 C-gga                 2.2048  Ang. Really at:  -0.0671  1.0124  0.0000
+    5 H-gga                 2.5304  Ang. Really at:   0.2512  2.3100 -1.6872
+    4 H-gga                 2.5304  Ang. Really at:   0.2512  2.3100  1.6872
+Neighbors of:     7 H-gga at:   1.7027 -2.3099  1.7054
+    1 C-gga                 1.1123  Ang. Really at:   1.9467 -1.1057  0.0000
+    8 H-gga                 1.8049  Ang. Really at:   1.7027 -2.3099 -1.7054
+    6 H-gga                 1.8139  Ang. Really at:   3.8891 -0.2947  0.0000
+    2 C-gga                 2.1869  Ang. Really at:  -0.0671  1.0124  0.0000
+    4 H-gga                 2.5626  Ang. Really at:   0.2512  2.3100  1.6872
+    3 O-gga                 2.7179  Ang. Really at:  -2.4712  0.1495 -0.0000
+    5 H-gga                 3.1289  Ang. Really at:   0.2512  2.3100 -1.6872
+Neighbors of:     8 H-gga at:   1.7027 -2.3099 -1.7054
+    1 C-gga                 1.1123  Ang. Really at:   1.9467 -1.1057  0.0000
+    7 H-gga                 1.8049  Ang. Really at:   1.7027 -2.3099  1.7054
+    6 H-gga                 1.8139  Ang. Really at:   3.8891 -0.2947  0.0000
+    2 C-gga                 2.1869  Ang. Really at:  -0.0671  1.0124  0.0000
+    5 H-gga                 2.5626  Ang. Really at:   0.2512  2.3100 -1.6872
+    3 O-gga                 2.7179  Ang. Really at:  -2.4712  0.1495 -0.0000
+    4 H-gga                 3.1289  Ang. Really at:   0.2512  2.3100  1.6872

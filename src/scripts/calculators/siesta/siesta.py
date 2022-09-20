@@ -42,7 +42,7 @@ class Siesta(object):
         self.structure_input.observe(self.check_uploaded_structure_file,'value') 
         self.valid_structure_input = wg.Valid(value=True,description='Valid!')
         
-        siesta_logo = get_calculator_logo("./images/siesta.png", "png")
+        siesta_logo = get_calculator_logo("./src/images/siesta.png", "png")
 
         title_SIESTA = wg.HTML(
             value="SIESTA parameters")
@@ -224,7 +224,7 @@ class Siesta(object):
         
         self.label_input = create_text_input(self.structure_label,'Label: ', width='350px')
         self.label_input.observe(self.update_label_input, 'value')
-        self.job_folder = FileChooser('../calculations/')#,layout=Layout(height='200px', width='500px'))
+        self.job_folder = FileChooser('./calculations/')#,layout=Layout(height='200px', width='500px'))
         self.job_folder.default_filename = self.label_input.value
         self.mesh_cutoff_input = create_int_text(200,'')
         self.mesh_cutoff_units = create_dropdown_input(['eV','Ang','nm','Bohr','Hartree','kJ','kcal','mol','Ry','meV'],
@@ -434,8 +434,8 @@ class Siesta(object):
                 self.root_directory = self.job_folder.value
                 self.structure_directory = f'{self.job_folder.value}/structure/'
             except:
-                self.root_directory = f'../calculations/{siesta_label}'
-                self.structure_directory = f'../calculations/{siesta_label}/structure/'
+                self.root_directory = f'./calculations/{siesta_label}'
+                self.structure_directory = f'./calculations/{siesta_label}/structure/'
 
             if not os.path.exists(self.root_directory):
                 os.makedirs(self.root_directory)
@@ -542,7 +542,7 @@ class Siesta(object):
         Create siesta run calculations block
         """
         
-        siesta_logo = get_calculator_logo("./images/siesta.png", "png")
+        siesta_logo = get_calculator_logo("./src/images/siesta.png", "png")
     
         #job parameters
         self.n_processors = create_int_text(1,'')
@@ -552,13 +552,13 @@ class Siesta(object):
 
 
         #list already create works in calculations folder
-        if not os.path.exists('../calculations/'):
-            os.makedirs('../calculations/')
+        if not os.path.exists('./calculations/'):
+            os.makedirs('./calculations/')
 
-        self.job_run_folder = FileChooser('../calculations/')#,layout=Layout(height='200px', width='500px'))
+        self.job_run_folder = FileChooser('./calculations/')#,layout=Layout(height='200px', width='500px'))
         self.job_run_folder.default_filename = ' '
 
-        list_calculations = os.listdir('../calculations/')
+        list_calculations = os.listdir('./calculations/')
         if len(list_calculations) == 0:
             self.available_calculations = create_dropdown_input(['None'],'None','')
         else:
@@ -737,7 +737,7 @@ PAO.SoftDefault false"""
         try:
             folder = self.job_run_folder.value.split('/ ')[0]
         except:
-            folder = '../calculations/'
+            folder = './calculations/'
         for calc in calcs:
 
             self.root_directory = f'{folder}/{calc}'
@@ -791,7 +791,7 @@ PAO.SoftDefault false"""
         try:
             folder = self.job_run_folder.value.split('/ ')[0]
         except:
-            folder = '../calculations'
+            folder = './calculations'
         for calc in self.available_calculations.value:
             self.siesta_label = calc
             self.root_directory = f'{folder}/{self.siesta_label}'
@@ -867,7 +867,7 @@ PAO.SoftDefault false"""
                            f"{self.structure_directory}", siesta_label)
 
         for pseudopotential in self.pseudopotentials:
-            os.system(f"cp pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
+            os.system(f"cp src/pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
         os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
         clear_output(wait=True)
         display(wg.HTML(value="Done."))
@@ -899,7 +899,7 @@ PAO.SoftDefault false"""
                             self.variable_cell_input_value, self.typerun_input_value, self.max_force_tol_input_value)
 
         for pseudopotential in self.pseudopotentials:
-            os.system(f"cp pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
+            os.system(f"cp src/pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
         os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
         clear_output(wait=True)
         
@@ -910,10 +910,10 @@ PAO.SoftDefault false"""
         check(self.structure_directory)
         df = pd.read_csv(self.structure_directory + 'Status.csv')[['System','TotalEnergy','Status']]
         if df['Status'][0] == 'False':
-            check_image = get_check_image("./images/check-failed.png", "png")
+            check_image = get_check_image("./src/images/check-failed.png", "png")
             status = 'Unrelaxed'
         else:
-            check_image = get_check_image("./images/check-success.png", "png")
+            check_image = get_check_image("./src/images/check-success.png", "png")
             status = 'Relaxed'
         display(wg.HTML(value="<p><em><strong>Relax structure</strong></em>&nbsp;</p>"))
         #display(wg.HTML(value="Done..."))
@@ -934,7 +934,7 @@ PAO.SoftDefault false"""
             os.system(f"mkdir {self.root_directory}/bands")
 
         for pseudopotential in self.pseudopotentials:
-            os.system(f"cp pseudopotentials/{pseudopotential} {self.root_directory}/bands/{pseudopotential}")
+            os.system(f"cp src/pseudopotentials/{pseudopotential} {self.root_directory}/bands/{pseudopotential}")
         try:
             os.system(f"cp {self.structure_directory}{siesta_label}-R.fdf {self.root_directory}/bands/{siesta_label}.fdf")
             change_system_relax_control(f"{self.structure_directory}{siesta_label}-R.fdf",
@@ -954,10 +954,10 @@ PAO.SoftDefault false"""
         try: 
             fig, gap = self.get_bands_figure(siesta_label)
             gap =  wg.HTML(value=f"<p><strong>structure Band Gap value: </strong>{gap}</p>")
-            check_image = get_check_image("./images/check-success.png", "png")
+            check_image = get_check_image("./src/images/check-success.png", "png")
             status = 'Ok'
         except:
-            check_image = get_check_image("./images/check-failed.png", "png")
+            check_image = get_check_image("./src/images/check-failed.png", "png")
             status = 'False'
 
         output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
@@ -1060,7 +1060,7 @@ PAO.SoftDefault false"""
             os.system(f"mkdir {self.root_directory}/dos")
 
         for pseudopotential in self.pseudopotentials:
-            os.system(f"cp pseudopotentials/{pseudopotential} {self.root_directory}/dos/{pseudopotential}")
+            os.system(f"cp src/pseudopotentials/{pseudopotential} {self.root_directory}/dos/{pseudopotential}")
         try:
             os.system(f"cp {self.structure_directory}{siesta_label}-R.fdf {self.root_directory}/dos/{siesta_label}.fdf")
             change_system_relax_control(f"{self.structure_directory}{siesta_label}-R.fdf",
@@ -1084,10 +1084,10 @@ PAO.SoftDefault false"""
         try: 
             fig, eig = self.get_dos_figure(siesta_label)
             fermi_energy =  wg.HTML(value=f"<p><strong>structure fermi energy: </strong>{eig} eV</p>")
-            check_image = get_check_image("./images/check-success.png", "png")
+            check_image = get_check_image("./src/images/check-success.png", "png")
             status = 'Ok'
         except:
-            check_image = get_check_image("./images/check-failed.png", "png")
+            check_image = get_check_image("./src/images/check-failed.png", "png")
             status = 'False'
 
         output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
@@ -1141,7 +1141,7 @@ PAO.SoftDefault false"""
             os.system(f"mkdir {self.root_directory}/optical")
 
         for pseudopotential in self.pseudopotentials:
-            os.system(f"cp pseudopotentials/{pseudopotential} {self.root_directory}/optical/{pseudopotential}")
+            os.system(f"cp src/pseudopotentials/{pseudopotential} {self.root_directory}/optical/{pseudopotential}")
         try:
             os.system(f"cp {self.structure_directory}{siesta_label}-R.fdf {self.root_directory}/optical/{siesta_label}.fdf")
             change_system_relax_control(f"{self.structure_directory}{siesta_label}-R.fdf",
@@ -1164,10 +1164,10 @@ PAO.SoftDefault false"""
         
         try: 
             fig = self.get_opt_figure(siesta_label)
-            check_image = get_check_image("./images/check-success.png", "png")
+            check_image = get_check_image("./src/images/check-success.png", "png")
             status = 'Ok'
         except:
-             check_image = get_check_image("./images/check-failed.png", "png")
+             check_image = get_check_image("./src/images/check-failed.png", "png")
              status = 'False'
 
         output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
@@ -1434,7 +1434,7 @@ PAO.SoftDefault false"""
         Display post-processing options: Optical results, band structure, density of states 
         """
         
-        siesta_logo = get_calculator_logo("./images/siesta.png", "png")
+        siesta_logo = get_calculator_logo("./src/images/siesta.png", "png")
         
         self.siesta_optical_results()
         self.siesta_bands_results()
@@ -1462,7 +1462,7 @@ PAO.SoftDefault false"""
         Display post-processing band structure result block
         """
         self.graph_type = 'Bands'
-        siesta_logo = get_calculator_logo("./images/siesta.png", "png")
+        siesta_logo = get_calculator_logo("./src/images/siesta.png", "png")
         self.bands_result_box = wg.VBox([Postprocessing_graphs(self.graph_type).main_box]) 
         
     def siesta_dos_results(self):
@@ -1470,7 +1470,7 @@ PAO.SoftDefault false"""
         Display post-processing density of states result block
         """
         self.graph_type = 'Dos'
-        siesta_logo = get_calculator_logo("./images/siesta.png", "png")
+        siesta_logo = get_calculator_logo("./src/images/siesta.png", "png")
         self.dos_result_box = wg.VBox([Postprocessing_graphs(self.graph_type).main_box]) 
 
 

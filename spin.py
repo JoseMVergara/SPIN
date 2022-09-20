@@ -6,6 +6,7 @@ Created on Thu Jul 21 21:12:26 2022
 """
 
 import sys
+sys.path.append('./src/scripts/')
 sys.path.append('./scripts/')
 from main import *
 

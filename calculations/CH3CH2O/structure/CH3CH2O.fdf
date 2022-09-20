@@ -1,0 +1,82 @@
+#####################################
+#       Parallel options            #
+#    BlockSize   32                 #
+#    ProcessorY  16                 #
+#   DiagMemory  1                   #
+#   TryMemoryIncrease  true         #
+#   DiagScale   1                   #
+#   ParallelOverK      false        #
+#######################################
+#####################################
+#       General Options             #
+  UseSaveData	     False	        #	
+  WriteCoorInital    false          #
+  WriteCoorStep      false          #
+  WriteForces	     false          #
+  WriteKpoints	     false          #
+  WriteEigenvalues   false          #
+  WriteKbands	     false          #
+  WriteBands	     false          #
+  WriteMullikenPop   0              #
+  WriteDM	     true               #
+  WriteCoorXmol	    false           #
+  WriteCoorCerius    false          #
+  WriteMDXmol	     false          #
+  WriteMDhistory     false          #
+  WriteDenchar       true           #
+  SaveRHO            true           #
+#  WriteDenchar       true          #
+#  COOP.Write         true          #
+#  SaveElectrostaticPotential true  #
+#####################################
+SystemLabel      CH3CH2O
+SystemName       CH3CH2O
+NumberOfAtoms    8
+NumberOfSpecies  3
+%block ChemicalSpeciesLabel
+1  6  C-gga
+2  8  O-gga
+3  1  H-gga
+%endblock ChemicalSpeciesLabel
+#---------------------------------------------------------------------------------------------
+#    DFT   Calcule Control
+#---------------------------------------------------------------------------------------------
+PAO.BasisSize     DZP
+PAO.EnergyShift   100.0 meV
+XC.functional     GGA
+XC.authors        PBE
+MaxSCFIterations  150
+MeshCutoff        200  Ry
+DM.MixingWeight   0.1
+DM.Tolerance      1.000E-4
+DM.NumberPulay    5
+SolutionMethod    diagon
+ElectronicTemperature  25.86  meV
+Spin    non-polarized
+
+#----------------------------------------------------------------------------------------------
+#     System  Relax Control
+#----------------------------------------------------------------------------------------------
+MD.TypeOfRun FIRE
+MD.NumCGsteps  200
+MD.VariableCell  .True.
+MD.MaxForceTol    0.04 eV/Ang
+#-----------------------------------------------------------------------------------------------
+# Geometric  structure
+#-----------------------------------------------------------------------------------------------
+
+AtomicCoordinatesFormat Ang
+AtomCoorFormatOut  Ang
+
+
+AtomicCoordinatesFormat NotScaledCartesianAng
+%block AtomicCoordinatesAndAtomicSpecies
+    1.004760000000    -0.568260000000    0.000000000000    1
+    0.000000000000    0.588690000000    0.000000000000    1
+    -1.260060000000    0.000730000000    0.000000000000    2
+    0.146960000000    1.204680000000    0.896530000000    3
+    0.146960000000    1.204680000000    -0.896530000000    3
+    2.019360000000    -0.164100000000    0.000000000000    3
+    0.869340000000    -1.186830000000    0.888070000000    3
+    0.869340000000    -1.186830000000    -0.888070000000    3
+%endblock AtomicCoordinatesAndAtomicSpecies

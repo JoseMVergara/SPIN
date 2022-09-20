@@ -44,7 +44,7 @@ class Viewer(object):
         self.cif = cif_content
         
  
-        self.periodic_table = pd.read_excel('./complements/periodic_table.xlsx')        
+        self.periodic_table = pd.read_excel('./src/complements/periodic_table.xlsx')        
         self.show_structure_labels = args[0]    
         self.viewer_style = args[1]   
         self.visualizer = args[2]                                                                                      
