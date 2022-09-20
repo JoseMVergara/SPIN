@@ -33,13 +33,13 @@ The Geometric description has two taps: Structure options and Viewer.
 ### Structure options:
  Is the tap we will use to generate our first set of atomic coordinates. This tap includes four options:
 
-__Upload file:__ Allow us to load external structure files in the formats supported by [Openbabel](https://open-babel.readthedocs.io/en/latest/FileFormats/Overview.html). The program supports the SIESTA file formats *.fdf also.
+1. __Upload file:__ Allow us to load external structure files in the formats supported by [Openbabel](https://open-babel.readthedocs.io/en/latest/FileFormats/Overview.html). The program supports the SIESTA file formats *.fdf also.
 
-__Create structure manually:__ This is our default option for entering the atomic coordinates and unit cell vectors. Coordinates have to be include in Angstrom units.
+2. __Create structure manually:__ This is our default option for entering the atomic coordinates and unit cell vectors. Coordinates have to be include in Angstrom units.
 
-__Structures predefined:__ Allow us to access the [ase build options](https://wiki.fysik.dtu.dk/ase/ase/build/build.html).
+3. __Structures predefined:__ Allow us to access the [ase build options](https://wiki.fysik.dtu.dk/ase/ase/build/build.html).
 
-__Load created structures:__ This option allows us to load previous built structures.
+4. __Load created structures:__ This option allows us to load previous built structures.
 
 
 ### Viewer
@@ -55,13 +55,13 @@ __Upload input file :__ In this  option  we  can  reload the  parameters  from  
 
 __Create  input file:__ We  can  setup  all  basis  DFT  parameters,  also we  can  defined the  type  of  calculation,  four option  are  predefined.
 
-    Relax structure: This  option is  mandatory  to  run the  other  calculation,  due that it  create  the  file "label-relaxed.cif" that have  the  equilibrium  structure required  for  bands, DOS and  optical  calculations.
+1. __Relax structure:__ This  option is  mandatory  to  run the  other  calculation,  due that it  create  the  file "label-relaxed.cif" that have  the  equilibrium  structure required  for  bands, DOS and  optical  calculations.
 
-    Calculate Bands structure: Defined  the option  to  get  the band structure for  periodic  systems.
+2. __Calculate Bands structure:__ Defined  the option  to  get  the band structure for  periodic  systems.
 
-    Calculate  Total  and  Partial Density  of  states: We  can  get  the  DOS  and  PDOS,  for  PDOS  this  beta version  do not include  a  processor  to  plot it.
+3. __Calculate  Total  and  Partial Density  of  states:__ We  can  get  the  DOS  and  PDOS,  for  PDOS  this  beta version  do not include  a  processor  to  plot it.
 
-    Calculate  Optical properties: Defined  the option  to  get  the optical properties for  periodic  systems.
+4. __Calculate  Optical properties:__ Defined  the option  to  get  the optical properties for  periodic  systems.
 
 
 ## Description of Control workflow and calculations
