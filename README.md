@@ -68,6 +68,9 @@ __Create  input file:__ We  can  setup  all  basis  DFT  parameters,  also we  c
 
 This section allows user to select and perform single or multiple calculations.
 
+## Examples
+There are [some example calculations](https://github.com/JoseMVergara/SPIN/tree/main/examples) given with different usage scenarios. 
+
 ## About the project
 
 SPIN project is currently in its __Beta__ version and is open to the general public.
