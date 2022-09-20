@@ -1,5 +1,8 @@
 import ipywidgets as wg
 import sys
+sys.path.append('./scripts/calculators/siesta')
+sys.path.append('./scripts/calculators/vasp')
+sys.path.append('./images/')
 sys.path.append('./src/scripts/')
 sys.path.append('./src/scripts/calculators/siesta')
 sys.path.append('./src/scripts/calculators/vasp')
@@ -8,6 +11,7 @@ sys.path.append('./scripts/')
 sys.path.append('./scripts/calculators/siesta')
 sys.path.append('./scripts/calculators/vasp')
 sys.path.append('./images/')
+
 import numpy as np
 import os
 from ipywidgets import interact, interactive, fixed, interact_manual, Button, Layout, jslink, IntText, GridBox, Label, Box
