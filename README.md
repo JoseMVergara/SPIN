@@ -1,3 +1,5 @@
+![Logo](./src/images/spin_logo.png "Logo") 
+
 # SPIN: [S]imple [P]ython [I]pywidgets Interface to obtain the optoelectronic properties of [N]anostructures
 
 ## Introduction
