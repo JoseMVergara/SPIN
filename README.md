@@ -1,6 +1,17 @@
-![Logo](./src/images/spin_logo.png "Logo") 
 
-# SPIN: [S]imple [P]ython [I]pywidgets Interface to obtain the optoelectronic properties of [N]anostructures
+
+
+
+
+#  <img src="./src/images/spin_logo.png" width="100"> :[S]imple [P]ython [I]pywidgets Interface to obtain the optoelectronic properties of [N]anostructures
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Issues:](https://img.shields.io/github/issues/JoseMVergara/SPIN)](https://github.com/JoseMVergara/SPIN/issues)
+[![Pull requests:](https://img.shields.io/github/issues-pr/JoseMVergara/SPIN)](https://github.com/JoseMVergara/SPIN/pulls)
+[![Latest version:](https://img.shields.io/github/v/release/JoseMVergara/SPIN)](https://github.com/JoseMVergara/SPIN/releases/)
+![Release date:](https://img.shields.io/github/release-date/JoseMVergara/SPIN)
+[![Commits:](https://img.shields.io/github/commit-activity/m/JoseMVergara/SPIN)](https://github.com/JoseMVergara/SPIN/commits/main)
+[![Last Commit:](https://img.shields.io/github/last-commit/JoseMVergara/SPIN)](https://github.com/JoseMVergara/SPIN/commits/main)
 
 ## Introduction
 
