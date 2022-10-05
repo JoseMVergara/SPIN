@@ -97,7 +97,7 @@ class Spin(Siesta):
         self.title_current_structure = wg.HTML(
                  value=f"<b> Structure</b>")
         self.structure_label_input = create_text_input('Structure','Label: ',  width='450px')
-
+        self.structure_label_input.observe(self.update_structure_label_input, 'value')
         #define box layout / box style
         box_layout = Layout(display='flex',
                     flex_flow='column',
@@ -139,6 +139,9 @@ class Spin(Siesta):
 
         self.structure_from_file = True
         self.geometric_structure()
+
+        self.job_folder = FileChooser('./calculations/')#,layout=Layout(height='200px', width='500px'))
+        self.job_folder.default_filename = self.structure_label_input.value
         self.geometric_structure_box = wg.Accordion(children = [VBox([HBox([self.structure_input,
                                                 Label('Please upload a structure file')]),
                                         self.valid_structure_input]),
@@ -251,6 +254,12 @@ class Spin(Siesta):
          self.update_job_load_folder_button]),
                                                 self.created_structures_list, load_button],
                                                 layout = {'width':'max-content'})
+    def update_structure_label_input(self,change):
+        self.job_folder.default_filename = change.new
+        try:
+            self.label_input.value = change.new
+        except:
+            pass
         
     def list_available_structures(self, change):
         try:
@@ -275,10 +284,12 @@ class Spin(Siesta):
 
         
         content = ''
-        
-        with open(f'{structure_directory}{label}.fdf', 'r') as file:
-            content = file.read()
-        
+        try:
+            with open(f'{structure_directory}{label}-R.fdf', 'r') as file:
+                content = file.read()
+        except:
+             with open(f'{structure_directory}{label}.fdf', 'r') as file:
+                content = file.read()
         content = self.convert_any_format_to_cif([{f'{label}.fdf':{'name':f'{label}.fdf',
                                     'type':'type_',
                                     'size':'size',
@@ -379,6 +390,7 @@ class Spin(Siesta):
                 display(logo)
                 display(self.geometric_structure_box)
                 display(self.structure_label_input)
+                display(HBox([Label('Output job folder (Default "Calculations"): '), self.job_folder]))
                 display(VBox([self.sheet1,self.sheet2, create_structure_button]))
 
             self.df_coordinates = df_coordinates
@@ -784,6 +796,8 @@ class Spin(Siesta):
             logo = get_calculator_logo("./src/images/spin_logo.png", "png")
             display(logo)
             display(self.structure_label_input)
+            display(HBox([Label('Output job folder (Default "Calculations"): '), self.job_folder]))
+
             display(self.geometric_structure_box)
             display(VBox([self.sheet1,self.sheet2, create_structure_button]))
     
@@ -992,6 +1006,8 @@ class Spin(Siesta):
                 display(logo)
                 display(self.geometric_structure_box)
                 display(self.structure_label_input)
+                display(HBox([Label('Output job folder (Default "Calculations"): '), self.job_folder]))
+
                 display(VBox([self.sheet1,self.sheet2, create_structure_button]))
 
             self.df_coordinates = df_coordinates
@@ -1034,7 +1050,7 @@ class Postprocessing(Spin):
         display postprocessing blocks
         """
         self.create_postprocessing_tabs()
-        logo = get_calculator_logo("./images/spin_logo.png", "png")
+        logo = get_calculator_logo("./src/images/spin_logo.png", "png")
         display(logo)
         display(self.supported_postprocessing)
 

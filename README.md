@@ -23,11 +23,27 @@ First step is clone this repository:
 
     git clone https://github.com/JoseMVergara/SPIN.git
 
-SPIN program is written in Python 3 (>= 3.6). It has  some dependences. To install the necessary modules, run in the terminal (command line):
+For a correct functioning of the tool it is necessary to have anaconda installed in our computer. Please visit the site and follow the installation instructions according to your operating system (If you already have Anaconda installed please ignore this step).
 
-    pip3 install -r ./requirements.txt
+    https://docs.anaconda.com/anaconda/install/
+
+
+Enter the clone folder, run in the terminal (command line):
+
+    cd SPIN
+
+
+SPIN program is written in Python 3 (>= 3.6). It has  some dependences. It is higly recommended to create a new conda environment with the necessary modules:
+
+    conda env create -f environment.yml
+
+
 
 ## Run
+
+Activate conda spin environment:
+
+    conda activate spin
 
 To run the program, please intance a jupyter notebook, run in command line:
 

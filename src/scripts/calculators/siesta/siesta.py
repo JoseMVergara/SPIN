@@ -122,8 +122,7 @@ class Siesta(object):
         self.download_file_ = wg.HTML(value='None')
         self.download_file_.layout.display = 'none'
 
-        self.create_siesta_box = wg.VBox([self.label_input,
-                                        HBox([Label('Output job folder (Default "Calculations"): '),self.job_folder]),
+        self.create_siesta_box = wg.VBox([
                                        self.siesta_blocks,
                                        create_fdf_button,self.create_fdf_message,
                                        HBox([self.download_file, self.download_file_]),
@@ -222,10 +221,9 @@ class Siesta(object):
         Create input for siesta calcule control box for fdf creation
         """
         
-        self.label_input = create_text_input(self.structure_label,'Label: ', width='350px')
+        self.label_input = self.structure_label_input#create_text_input(self.structure_label,'Label: ', width='350px')
         self.label_input.observe(self.update_label_input, 'value')
-        self.job_folder = FileChooser('./calculations/')#,layout=Layout(height='200px', width='500px'))
-        self.job_folder.default_filename = self.label_input.value
+     
         self.mesh_cutoff_input = create_int_text(200,'')
         self.mesh_cutoff_units = create_dropdown_input(['eV','Ang','nm','Bohr','Hartree','kJ','kcal','mol','Ry','meV'],
                                                   'Ry','')
@@ -1790,27 +1788,92 @@ class Postprocessing_graphs(wg.HBox):
             key = list(change_new.keys())[new_line]
             #get content of each file
             content ="".join(map(chr, change_new[key]['content']))
-            content = StringIO(content)
-            val = np.loadtxt(content)
+            content = StringIO(content).getvalue()
+    
             color = colors[new_line]
             label = key
             
-            valx = val[:,0] 
-            valy =val[:,1] 
-            data = [valx,valy ]
+            #valx = val[:,0] 
+            #valy =val[:,1] 
+            #data = [valx,valy ]
+            info = []
+            y_data_up = []
+            y_data_down = []
+            for i,line in enumerate(content.split('\n')):    
+                if i == 0:
+                    e_f = float(line)
+                if i == 1:
+                    k_min, k_max = float(line.split()[0]),float(line.split()[1])
+                if i == 2:
+                    e_min, e_max = float(line.split()[0]),float(line.split()[1])
+                if i == 3:
+                    nbands, nspin, nk = int(line.split()[0]),int(line.split()[1]),int(line.split()[2])
+                    x_data = np.linspace(k_min, k_max, nk)
+                if i > 3:
+                    for value in line.split():
+                        info += [float(value)]
+                    if (i-3)%round(nbands/10) == 0:
+                        if nspin == 1:
+                            y_data_up += [np.array(info[1:])-e_f]
+                        else:
+                            y_data_up += [np.array(info[1:nbands])-e_f]
+                            y_data_down += [np.array(info[-nbands:])-e_f]
+                        info = []
+                    if len([i[0] for i in y_data_up]) == nk:
+                        break
+
+            positiveY = []
+            negativeY = []
+            verbose = False	
+            for i in range(nbands):
+                #ax.plot([band[i] for band in y_data_up],color='blue',linewidth=0.5)
+                y = np.array([band[i] for band in y_data_up])
+                data = [np.arange(0,len(y),1),y]
+                band_line = Line_graph(data, self.ax, 'label',self.graph_type , color = color)
+                line, color_picker, label, linestyle_option = band_line.add_new_line()
+                try:
+                    if all(i >= 0  for i in y) or all(i <= 0  for i in y):    
+                        pass
+                    else:               
+                        verbose = True
+                except: pass
+
+                try:
+                    positiveY += [np.min(y[y>0])]
+                except:
+                    pass
+                try:
+                    negativeY += [np.max(y[y<0])]
+                except:
+                    pass
+
+            if verbose:
+                gap = 0
+
+            else:
+                if np.min(positiveY) < 1e-04 or np.abs(np.max(negativeY)) < 1e-04:
+                    gap = 0
+                elif np.min(positiveY) < 1e-03 and np.abs(np.max(negativeY)) < 1e-03:
+                    gap = 0
+                else:
+                    gap = np.min(positiveY) + np.abs(np.max(negativeY))
+                    if gap < 0.02:
+                        gap = 0
+            if nspin == 2:
+                ax.plot([band[i] for band in y_data_down],color='red',linewidth=0.5)
             
             #Create optical line object with label, color picker and linestyle options widgets
-            band_line = Line_graph(data, self.ax, label,self.graph_type , color = color)
-            line, color_picker, label, linestyle_option = band_line.add_new_line()
+            
+            
             #Update values
-            self.ax.set_xlim(np.min(valx), np.max(valx))
+            #self.ax.set_xlim(0, np.max(valx))
             self.input_xticks_positions.value = str(self.ax.get_xticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
             self.input_xticks_labels.value = str(self.ax.get_xticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
             self.input_yticks_positions.value = str(self.ax.get_yticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
             self.input_yticks_labels.value = str(self.ax.get_yticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','') 
-            self.input_xlim.value = [np.min(valx), np.max(valx)]
-            self.ax.set_ylim(np.min(valy), np.max(valy))
-            self.input_ylim.value = [np.min(valy), np.max(valy)]
+            #self.input_xlim.value = [np.min(valx), np.max(valx)]
+            #self.ax.set_ylim(np.min(valy), np.max(valy))
+            #self.input_ylim.value = [np.min(valy), np.max(valy)]
             self.line_options_list += [HBox([label,color_picker, linestyle_option])]
  
         #Update figure
