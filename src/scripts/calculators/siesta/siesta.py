@@ -1438,14 +1438,14 @@ PAO.SoftDefault false"""
         self.siesta_bands_results()
         self.siesta_dos_results()
         
-        self.supported_postprocessing = wg.Accordion(children = [self.dos_result_box,
-                                                              self.bands_result_box,
-                                                              self.optical_result_box
+        self.supported_postprocessing = wg.Accordion(children = [self.bands_result_box,
+                                                                self.dos_result_box,
+                                                                self.optical_result_box
                                                               ])
 
         self.supported_postprocessing.set_title(2, 'Optical results')
-        self.supported_postprocessing.set_title(1, 'Band structure results')
-        self.supported_postprocessing.set_title(0, 'Density of states results')
+        self.supported_postprocessing.set_title(0, 'Band structure results')
+        self.supported_postprocessing.set_title(1, 'Density of states results')
         self.postprocessing_siesta_box = wg.VBox([siesta_logo, self.supported_postprocessing])  
 
     def siesta_optical_results(self):
@@ -1558,9 +1558,9 @@ class Postprocessing_graphs(wg.HBox):
         self.input_yticks_labels = widgets.Textarea(description = 'yticks labels:')
         self.input_xlim = widgets.FloatRangeSlider(
             value=[5, 7.5],
-            min=-50,
-            max=50.0,
-            step=0.1,
+            min=-200,
+            max=1000.0,
+            step=1,
             description='xlim:',
             disabled=False,
             continuous_update=False,
@@ -1570,8 +1570,8 @@ class Postprocessing_graphs(wg.HBox):
         
         self.input_ylim = widgets.FloatRangeSlider(
             value=[5, 7.5],
-            min=-50,
-            max=50.0,
+            min=-500,
+            max=500.0,
             step=0.1,
             description='ylim:',
             disabled=False,
@@ -1631,9 +1631,9 @@ class Postprocessing_graphs(wg.HBox):
             self.spin_down = widgets.HBox([Label('Opcional if Spin: Select Spin down bands file result:'),
                                             self.upload_spin_down_file ])
             controls = widgets.VBox([
-                self.spin,
-            widgets.HBox([Label('Select bands or Spin Up (if Spin) file result:'),self.upload_file]),
-            self.spin_down,
+                #self.spin,
+            widgets.HBox([Label('Select .bands file result:'),self.upload_file]),
+            #self.spin_down,
                 self.line_options,self.update_graph, 
                 text_xlabel, 
                 text_ylabel,
@@ -1786,12 +1786,11 @@ class Postprocessing_graphs(wg.HBox):
         # loop over the band file or files uploaded
         for new_line in range(self.number_files):
             key = list(change_new.keys())[new_line]
+
             #get content of each file
             content ="".join(map(chr, change_new[key]['content']))
             content = StringIO(content).getvalue()
-    
-            color = colors[new_line]
-            label = key
+            label = key.split('.')[0]
             
             #valx = val[:,0] 
             #valy =val[:,1] 
@@ -1825,46 +1824,52 @@ class Postprocessing_graphs(wg.HBox):
             positiveY = []
             negativeY = []
             verbose = False	
+            data_up = []
+            data_down = []
+            x_ups = []
+            x_down = []
+            y_ups = []
+            y_down = []
             for i in range(nbands):
                 #ax.plot([band[i] for band in y_data_up],color='blue',linewidth=0.5)
                 y = np.array([band[i] for band in y_data_up])
-                data = [np.arange(0,len(y),1),y]
-                band_line = Line_graph(data, self.ax, 'label',self.graph_type , color = color)
-                line, color_picker, label, linestyle_option = band_line.add_new_line()
-                try:
-                    if all(i >= 0  for i in y) or all(i <= 0  for i in y):    
-                        pass
-                    else:               
-                        verbose = True
-                except: pass
-
-                try:
-                    positiveY += [np.min(y[y>0])]
-                except:
-                    pass
-                try:
-                    negativeY += [np.max(y[y<0])]
-                except:
-                    pass
-
-            if verbose:
-                gap = 0
-
-            else:
-                if np.min(positiveY) < 1e-04 or np.abs(np.max(negativeY)) < 1e-04:
-                    gap = 0
-                elif np.min(positiveY) < 1e-03 and np.abs(np.max(negativeY)) < 1e-03:
-                    gap = 0
-                else:
-                    gap = np.min(positiveY) + np.abs(np.max(negativeY))
-                    if gap < 0.02:
-                        gap = 0
-            if nspin == 2:
-                ax.plot([band[i] for band in y_data_down],color='red',linewidth=0.5)
+                x_ups.append(np.arange(0,len(y),1))
+                y_ups.append(y)
+                
+                if nspin == 2:
+                    y = np.array([band[i] for band in y_data_down])
+                    x_down.append(np.arange(0,len(y),1))
+                    y_down.append(y)
+                
+                #ax.plot([band[i] for band in y_data_down],color='red',linewidth=0.5)
             
-            #Create optical line object with label, color picker and linestyle options widgets
-            
-            
+        #Create optical line object with label, color picker and linestyle options widgets
+                #data_up += [np.array(x_ups).flatten(),np.array(y_ups).flatten()]
+                #band_line = Line_graph(data_up, self.ax, 'label',self.graph_type , color = 'blue')
+
+
+        data_up = [x_ups, y_ups]
+        band_line = Line_graph(data_up, self.ax, 'label',self.graph_type , color = 'blue')
+        line, color_picker, label, linestyle_option = band_line.add_new_line()
+                
+
+        #Update values
+        
+        #self.ax.set_xlim(0, np.max(valx))
+        self.input_xticks_positions.value = str(self.ax.get_xticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
+        self.input_xticks_labels.value = str(self.ax.get_xticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
+        self.input_yticks_positions.value = str(self.ax.get_yticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
+        self.input_yticks_labels.value = str(self.ax.get_yticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','') 
+        #self.input_xlim.value = [np.min(valx), np.max(valx)]
+        #self.ax.set_ylim(np.min(valy), np.max(valy))
+        #self.input_ylim.value = [np.min(valy), np.max(valy)]
+        self.line_options_list += [HBox([label,color_picker, linestyle_option])] #,color_picker, linestyle_option
+
+        if nspin == 2:
+            data_down = [x_down, y_down]
+            band_line = Line_graph(data_down, self.ax, 'label',self.graph_type , color = 'red')
+            line, color_picker, label, linestyle_option = band_line.add_new_line()
+        
             #Update values
             #self.ax.set_xlim(0, np.max(valx))
             self.input_xticks_positions.value = str(self.ax.get_xticks()).replace('[ ','').replace(']','').replace('[','').replace(' ]','')
@@ -1908,7 +1913,7 @@ class Postprocessing_graphs(wg.HBox):
             content = StringIO(content)
             val = np.loadtxt(content)
             color = colors[new_line]
-            label = key
+            label = 'bands'#key
             
             try:
                 #Calculation with Spin polarization
@@ -2175,7 +2180,13 @@ class Line_graph(Postprocessing_graphs):
         """
         Method for adding a new line to main plot (fig)
         """
-        self.line, = self.ax.plot(self.x, self.y, self.initial_color, label = self.label)
+        if self.graph_type == 'Bands':
+            self.ax.plot(self.x[0], self.y[0], self.initial_color, label = self.label)
+            for i in range(1,len(self.x)):
+                self.ax.plot(self.x[i], self.y[i], self.initial_color)
+            self.line = self.ax.lines
+        else:
+            self.line, = self.ax.plot(self.x, self.y, self.initial_color, label = self.label)
         #Color picker widget 
         self.color_picker = widgets.ColorPicker(
             value=self.initial_color, 
@@ -2200,13 +2211,20 @@ class Line_graph(Postprocessing_graphs):
         """
         Method for update line color
         """
-        self.line.set_color(change.new) 
+        if type(self.line) == list:
+            for line in self.line:
+                line.set_color(change.new)
+        else:
+            self.line.set_color(change.new) 
 
     def label_text(self, change):
         """
         Method for update label
         """
-        self.line.set_label(change.new) 
+        if type(self.line) == list:
+            self.line[0].set_label(change.new)
+        else:
+            self.line.set_label(change.new) 
 
     def linestyle(self, change):
         """
@@ -2214,7 +2232,12 @@ class Line_graph(Postprocessing_graphs):
         """
         linestyles={'solid line':'solid','dashed line':'dashed','dash-dotted line':'dashdot',
         'dotted line':'dotted'}
-        self.line.set_linestyle(linestyles[change.new]) 
+        
+        if type(self.line) == list:
+            for line in self.line:
+                line.set_linestyle(linestyles[change.new]) 
+        else:
+            self.line.set_linestyle(linestyles[change.new]) 
 
 
   
