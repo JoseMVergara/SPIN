@@ -23,7 +23,7 @@ First step is clone this repository:
 
     git clone https://github.com/JoseMVergara/SPIN.git
 
-For a correct functioning of the tool it is necessary to have anaconda installed in our computer. Please visit the site and follow the installation instructions according to your operating system (If you already have Anaconda installed please ignore this step).
+For a correct functioning of the tool it is necessary to have anaconda installed in our computer. Please visit the site and follow the installation instructions according to your operating system. For Windows user's is highly recommended to use Windows Subsystem for Linux - WSL (If you already have Anaconda installed please ignore this step).
 
     https://docs.anaconda.com/anaconda/install/
 
@@ -35,7 +35,7 @@ Enter the clone folder, run in the terminal (command line):
 
 SPIN program is written in Python 3 (>= 3.6). It has  some dependences. It is higly recommended to create a new conda environment with the necessary modules:
 
-    conda env create -f environment.yml
+    conda create --name spin --file requirements.txt --channel conda-forge/label/cf201901 --channel anaconda --channel conda-forge --channel default 
 
 
 
@@ -96,6 +96,11 @@ __Create  input file:__ We  can  setup  all  basis  DFT  parameters,  also we  c
 ## Description of Control workflow and calculations
 
 This section allows user to select and perform single or multiple calculations.
+
+
+## Description of Postprocessing component
+
+This section allows user to plot and fully customize graphs results from band strucrure, DOS or optical calculations.
 
 ## Examples
 There are [some example calculations](https://github.com/JoseMVergara/SPIN/tree/main/examples) given with different usage scenarios. 

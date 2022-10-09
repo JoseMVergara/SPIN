@@ -34,7 +34,6 @@ from ase.build import nanotube as ase_nanotube
 from ase.collections import g2
 from openbabel import pybel
 from io import StringIO
-from html2image import Html2Image
 
 #Dependencias externas - siesta conda install -c conda-forge siesta=4.1.5=mpi_openmpi_hfab99a0_1
 
