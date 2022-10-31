@@ -1,0 +1,3 @@
+SystemName     Graphene                                                                        
+SystemLabel     Graphene                                                                        
+MPI.Nprocs.SIESTA         3     # default value

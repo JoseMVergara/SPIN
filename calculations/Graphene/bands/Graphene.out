@@ -8,15 +8,15 @@ PARALLEL version
 NetCDF support
 NetCDF-4 support
 
-* Running on 4 nodes in parallel
->> Start of run:  19-SEP-2022  21:46:28
+* Running on 3 nodes in parallel
+>> Start of run:  30-OCT-2022  22:06:39
 
                            ***********************       
                            *  WELCOME TO SIESTA  *       
                            ***********************       
 
 reinit: Reading from standard input
-reinit: Dumped input in INPUT_TMP.80302
+reinit: Dumped input in INPUT_TMP.53959
 ************************** Dump of input data file ****************************
 #####################################
 #       Parallel options            #
@@ -90,14 +90,14 @@ LatticeConstant 1.0 Ang
 AtomicCoordinatesFormat Ang
 AtomCoorFormatOut  Ang
 %block LatticeVectors
-        2.488326    0.203957    0.000000
-       -1.418515    2.050507   -0.000000
-        0.000000   -0.000000   14.998152
+        2.488326    0.203956   -0.000000
+       -1.418515    2.050508    0.000000
+       -0.000000    0.000001   14.998152
 %endblock LatticeVectors
 AtomicCoordinatesFormat NotScaledCartesianAng
 %block AtomicCoordinatesAndAtomicSpecies
-   -0.28736670    0.23396901    0.00000001   1       1  C-gga
-    0.89847509    1.05297335    0.00000001   1       2  C-gga
+   -0.28736768    0.23396976   -0.00000032   1       1  C-gga
+    0.89847215    1.05297398   -0.00000008   1       2  C-gga
 %endblock AtomicCoordinatesAndAtomicSpecies
 BandLinesScale ReciprocalLatticeVectors
  %block Bandlines
@@ -275,8 +275,8 @@ coor:   Atomic-coordinates input format  =     Cartesian coordinates
 coor:                                          (in Angstroms)
 
 siesta: Atomic coordinates (Bohr) and species
-siesta:     -0.54304   0.44214   0.00000  1        1
-siesta:      1.69787   1.98983   0.00000  1        2
+siesta:     -0.54305   0.44214  -0.00000  1        1
+siesta:      1.69787   1.98983  -0.00000  1        2
 
 siesta: System type = slab      
 
@@ -356,10 +356,10 @@ Size of DM history Fstack: 1
 Total number of electrons:     8.000000
 Total ionic charge:     8.000000
 
-* ProcessorY, Blocksize:    2   5
+* ProcessorY, Blocksize:    1   7
 
 
-* Orbital distribution balance (max,min):     5     3
+* Orbital distribution balance (max,min):     7     4
 
  Kpoints in:         3321 . Kpoints trimmed:         3281
 
@@ -372,9 +372,9 @@ siesta: k-grid:    0   0   1      0.000
 
 diag: Algorithm                                     = D&C
 diag: Parallel over k                               =   F
-diag: Use parallel 2D distribution                  =   T
-diag: Parallel block-size                           = 5
-diag: Parallel distribution                         =     2 x     2
+diag: Use parallel 2D distribution                  =   F
+diag: Parallel block-size                           = 7
+diag: Parallel distribution                         =     1 x     3
 diag: Used triangular part                          = Lower
 diag: Absolute tolerance                            =  0.100E-15
 diag: Orthogonalization factor                      =  0.100E-05
@@ -406,86 +406,83 @@ superc: Internal auxiliary supercell:     7 x     5 x     1  =      35
 superc: Number of atoms, orbitals, and projectors:     70    630   1120
 
 outcell: Unit cell vectors (Ang):
-        2.488326    0.203957    0.000000
-       -1.418515    2.050507   -0.000000
-        0.000000   -0.000000   14.998152
+        2.488326    0.203956   -0.000000
+       -1.418515    2.050508    0.000000
+       -0.000000    0.000001   14.998152
 
-outcell: Cell vector modules (Ang)   :    2.496671    2.493344   14.998152
+outcell: Cell vector modules (Ang)   :    2.496671    2.493345   14.998152
 outcell: Cell angles (23,13,12) (deg):     90.0000     90.0000    119.9892
 outcell: Cell volume (Ang**3)        :     80.8647
 <dSpData1D:S at geom step 0
   <sparsity:sparsity for geom step 0
-    nrows_g=18 nrows=5 sparsity=5.1389 nnzs=1665, refcount: 7>
-  <dData1D:(new from dSpData1D) n=1665, refcount: 1>
+    nrows_g=18 nrows=7 sparsity=7.1944 nnzs=2331, refcount: 7>
+  <dData1D:(new from dSpData1D) n=2331, refcount: 1>
 refcount: 1>
 new_DM -- step:     1
 Initializing Density Matrix...
 DM filled with atomic data:
 <dSpData2D:DM initialized from atoms
   <sparsity:sparsity for geom step 0
-    nrows_g=18 nrows=5 sparsity=5.1389 nnzs=1665, refcount: 8>
-  <dData2D:DM n=1665 m=1, refcount: 1>
+    nrows_g=18 nrows=7 sparsity=7.1944 nnzs=2331, refcount: 8>
+  <dData2D:DM n=2331 m=1, refcount: 1>
 refcount: 1>
 No. of atoms with KB's overlaping orbs in proc 0. Max # of overlaps:      13     117
 New grid distribution:   1
-           1       1:   12    1:    6    1:   36
-           2       1:   12    1:    6   37:   72
-           3       1:   12    7:   12    1:   36
-           4       1:   12    7:   12   37:   72
+           1       1:   12    1:   12    1:   24
+           2       1:   12    1:   12   25:   48
+           3       1:   12    1:   12   49:   72
 
 InitMesh: MESH =    24 x    24 x   144 =       82944
 InitMesh: (bp) =    12 x    12 x    72 =       10368
 InitMesh: Mesh cutoff (required, used) =   250.000   254.772 Ry
-ExtMesh (bp) on 0 =    72 x    66 x    88 =      418176
+ExtMesh (bp) on 0 =    72 x    72 x    76 =      393984
 New grid distribution:   2
-           1       1:   12    1:   12    5:   10
-           2       1:   12    1:   12   11:   68
-           3       1:   12    1:   12    1:    4
-           4       1:   12    1:   12   69:   72
+           1       1:   12    1:   12    1:    5
+           2       1:   12    1:   12    6:   67
+           3       1:   12    1:   12   68:   72
 New grid distribution:   3
-           1       1:   12    1:   12    7:   13
-           2       1:   12    1:   12   14:   66
-           3       1:   12    1:   12    1:    6
-           4       1:   12    1:   12   67:   72
+           1       1:   12    1:   12    1:    8
+           2       1:   12    1:   12    9:   64
+           3       1:   12    1:   12   65:   72
 Setting up quadratic distribution...
-ExtMesh (bp) on 0 =    72 x    72 x    58 =      300672
-PhiOnMesh: Number of (b)points on node 0 =                  864
-PhiOnMesh: nlist on node 0 =                43038
+ExtMesh (bp) on 0 =    72 x    72 x    57 =      295488
+PhiOnMesh: Number of (b)points on node 0 =                  720
+PhiOnMesh: nlist on node 0 =                49046
 
 stepf: Fermi-Dirac step function
 
 siesta: Program's energy decomposition (eV):
-siesta: Ebs     =      -118.178975
+siesta: Ebs     =      -118.178968
 siesta: Eions   =       524.139309
-siesta: Ena     =       116.364267
-siesta: Ekin    =       204.252956
-siesta: Enl     =       -18.036413
+siesta: Ena     =       116.364270
+siesta: Ekin    =       204.252934
+siesta: Enl     =       -18.036409
 siesta: Eso     =         0.000000
 siesta: Edftu   =         0.000000
-siesta: DEna    =         5.496586
+siesta: DEna    =         5.496594
 siesta: DUscf   =         0.309752
 siesta: DUext   =         0.000000
-siesta: Exc     =       -92.339004
+siesta: Exc     =       -92.338999
 siesta: eta*DQ  =         0.000000
 siesta: Emadel  =         0.000000
 siesta: Emeta   =         0.000000
 siesta: Emolmec =         0.000000
 siesta: Ekinion =         0.000000
-siesta: Eharris =      -307.338772
+siesta: Eharris =      -307.338777
 siesta: Etot    =      -308.091165
 siesta: FreeEng =      -308.091188
 
         iscf     Eharris(eV)        E_KS(eV)     FreeEng(eV)     dDmax    Ef(eV) dHmax(eV)
-   scf:    1     -307.338772     -308.091165     -308.091188  1.473871 -4.601344  1.096803
-timer: Routine,Calls,Time,% = IterSCF        1       4.016  85.95
-   scf:    2     -308.092073     -308.091621     -308.091644  0.000497 -4.696431  0.978949
+   scf:    1     -307.338777     -308.091165     -308.091188  1.473871 -4.601343  1.096804
+timer: Routine,Calls,Time,% = IterSCF        1       2.672  81.04
+   scf:    2     -308.092073     -308.091621     -308.091644  0.000497 -4.696431  0.978950
    scf:    3     -308.094700     -308.093274     -308.093297  0.004146 -5.492148  0.010664
-   scf:    4     -308.093290     -308.093282     -308.093305  0.000200 -5.505953  0.004102
+   scf:    4     -308.093290     -308.093282     -308.093305  0.000200 -5.505954  0.004102
    scf:    5     -308.093283     -308.093283     -308.093305  0.000026 -5.503304  0.000391
 
 SCF Convergence by DM+H criterion
-max |DM_out - DM_in|         :     0.0000256703
-max |H_out - H_in|      (eV) :     0.0003908040
+max |DM_out - DM_in|         :     0.0000256720
+max |H_out - H_in|      (eV) :     0.0003911062
 SCF cycle converged after 5 iterations
 
 Using DM_out to compute the final energy and forces
@@ -497,12 +494,12 @@ siesta: E_KS - E_eggbox =      -308.0933
 
 siesta: Atomic forces (eV/Ang):
 ----------------------------------------
-   Tot    0.000512   -0.019619   -0.000000
+   Tot    0.000487   -0.019610    0.000000
 ----------------------------------------
-   Max    0.015264
+   Max    0.015252
    Res    0.006493    sqrt( Sum f_i^2 / 3N )
 ----------------------------------------
-   Max    0.015264    constrained
+   Max    0.015252    constrained
 
 Stress tensor Voigt[x,y,z,yz,xz,xy] (kbar):       -7.32       -8.94        0.03       -0.00       -0.00        1.12
 (Free)E + p*V (eV/cell)     -307.8201
@@ -510,17 +507,17 @@ Target enthalpy (eV/cell)     -308.0933
 Computing bands...
 
 siesta: Program's energy decomposition (eV):
-siesta: Ebs     =      -117.668767
+siesta: Ebs     =      -117.668758
 siesta: Eions   =       524.139309
-siesta: Ena     =       116.364267
-siesta: Ekin    =       204.740690
-siesta: Enl     =       -18.194431
+siesta: Ena     =       116.364270
+siesta: Ekin    =       204.740669
+siesta: Enl     =       -18.194427
 siesta: Eso     =         0.000000
 siesta: Edftu   =         0.000000
-siesta: DEna    =         5.233665
+siesta: DEna    =         5.233673
 siesta: DUscf   =         0.306230
 siesta: DUext   =         0.000000
-siesta: Exc     =       -92.404394
+siesta: Exc     =       -92.404389
 siesta: eta*DQ  =         0.000000
 siesta: Emadel  =         0.000000
 siesta: Emeta   =         0.000000
@@ -531,36 +528,36 @@ siesta: Etot    =      -308.093283
 siesta: FreeEng =      -308.093305
 
 siesta: Final energy (eV):
-siesta:  Band Struct. =    -117.668767
-siesta:       Kinetic =     204.740690
-siesta:       Hartree =    1048.937400
+siesta:  Band Struct. =    -117.668758
+siesta:       Kinetic =     204.740669
+siesta:       Hartree =    1048.937189
 siesta:       Edftu   =       0.000000
 siesta:       Eso     =       0.000000
 siesta:    Ext. field =       0.000000
-siesta:   Exch.-corr. =     -92.404394
-siesta:  Ion-electron =   -2299.912951
-siesta:       Ion-ion =     830.545972
+siesta:   Exch.-corr. =     -92.404389
+siesta:  Ion-electron =   -2299.912506
+siesta:       Ion-ion =     830.545754
 siesta:       Ekinion =       0.000000
 siesta:         Total =    -308.093283
 siesta:         Fermi =      -5.503304
 
 siesta: Stress tensor (static) (eV/Ang**3):
-siesta:    -0.004572    0.000697   -0.000000
-siesta:     0.000697   -0.005582    0.000000
+siesta:    -0.004572    0.000696    0.000000
+siesta:     0.000696   -0.005582   -0.000000
 siesta:    -0.000000   -0.000000    0.000017
 
-siesta: Cell volume =         80.864725 Ang**3
+siesta: Cell volume =         80.864741 Ang**3
 
 siesta: Pressure (static):
 siesta:                Solid            Molecule  Units
-siesta:           0.00003680          0.00003656  Ry/Bohr**3
-siesta:           0.00337861          0.00335690  eV/Ang**3
-siesta:           5.41318314          5.37840542  kBar
+siesta:           0.00003680          0.00003655  Ry/Bohr**3
+siesta:           0.00337856          0.00335635  eV/Ang**3
+siesta:           5.41310465          5.37752349  kBar
 (Free)E+ p_basis*V_orbitals  =        -307.629368
 (Free)Eharris+ p_basis*V_orbitals  =        -307.629368
 
-siesta: Electric dipole (a.u.)  =   -0.000000   -0.000000   -0.000000
-siesta: Electric dipole (Debye) =   -0.000000   -0.000000   -0.000000
+siesta: Electric dipole (a.u.)  =    0.000000    0.000000    0.000000
+siesta: Electric dipole (Debye) =    0.000000    0.000000    0.000000
 
 cite: Please see "Graphene.bib" for an exhaustive BiBTeX file.
 cite: Please clearly indicate Siesta version in published work: 4.1.5
@@ -569,5 +566,5 @@ cite: which are encouraged to be cited in a published work.
         Primary SIESTA paper
           DOI: www.doi.org/10.1088/0953-8984/14/11/302
 
->> End of run:  19-SEP-2022  21:46:50
+>> End of run:  30-OCT-2022  22:06:54
 Job completed

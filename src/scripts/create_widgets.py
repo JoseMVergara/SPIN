@@ -20,13 +20,13 @@ def create_info_widget(tooltip):
                         icon='info', # (FontAwesome names without the `fa-` prefix)
                         layout=Layout(height='25px', width='25px'))
 
-def create_expanded_button(description, button_style):
+def create_expanded_button(description, button_style, disable = False):
     """
     Function to created expanded button widget
     input: button description, button style
 
     """
-    return Button(description=description, button_style=button_style, layout=Layout(height='25px', width='auto'))
+    return Button(description=description, button_style=button_style, disable = disable, layout=Layout(height='25px', width='auto'))
 
 def create_int_text(value, description, step = 1):
     """

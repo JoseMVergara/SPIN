@@ -25,6 +25,9 @@ from io import StringIO
 import random
 from ipyfilechooser import FileChooser
 import json
+import threading
+import warnings;
+warnings.filterwarnings('ignore')
 
 class Siesta(object):
 
@@ -121,7 +124,10 @@ class Siesta(object):
         self.download_file.on_click(self.download_fdf)
         self.download_file_ = wg.HTML(value='None')
         self.download_file_.layout.display = 'none'
-
+        self.errors_messages = wg.Output(layout = box_layout)
+        with self.errors_messages:
+            clear_output(True)
+            display(wg.HTML(value=''))
         self.create_siesta_box = wg.VBox([
                                        self.siesta_blocks,
                                        create_fdf_button,self.create_fdf_message,
@@ -141,68 +147,86 @@ class Siesta(object):
                         layout=Layout(height='50px', width='200px'))
         siesta_manual.on_click(self.window_open)
 
-        self.siesta_box = wg.VBox([wg.HBox([siesta_logo, siesta_manual]), self.siesta_blocks_options],layout = {'width':'max-content'})
+        self.siesta_box = wg.VBox([wg.HBox([siesta_logo, siesta_manual]), self.siesta_blocks_options, self.errors_messages],layout = {'width':'max-content'})
 
     def window_open(self, aux):
         url = "https://departments.icmab.es/leem/SIESTA_MATERIAL/Docs/Manuals/siesta-4.1-b4.pdf"
         display(Javascript('window.open("{url}");'.format(url=url)))
 
     def read_siesta_file(self, *args):
-            
-        if len(args) > 0:
-            uploaded_file = args[0].new
-            filename = next(iter(uploaded_file))
-            try: format_ = filename.split('.')[1]
-            except: format_ = filename.split('.')[0]
-        else:
-            uploaded_file = self.structure_input.value
-            filename = next(iter(uploaded_file))
-            format_ = 'fdf'
-            
+        try:
+            if len(args) > 0:
+                uploaded_file = args[0].new
+                filename = next(iter(uploaded_file))
+                try: format_ = filename.split('.')[1]
+                except: format_ = filename.split('.')[0]
+            else:
+                uploaded_file = self.structure_input.value
+                filename = next(iter(uploaded_file))
+                format_ = 'fdf'
+         
+            if format_ == 'fdf':
+                with open(filename, 'w') as f:
+                    f.write("".join(map(chr, uploaded_file[filename]['content'])))
+                f.close()
 
-        if format_ == 'fdf':
-            with open(filename, 'w') as f:
-                f.write("".join(map(chr, uploaded_file[filename]['content'])))
-            f.close()
+                fdf = read_fdf(filename) 
+                if 'paobasissize' in fdf.keys():
+                    self.basis_set_input.value = fdf['paobasissize'][0]
+                if  'paoenergyshift' in fdf.keys():
+                    self.energy_shift_input.value = fdf['paoenergyshift'][0]
+                    self.energy_shift_units.value = fdf['paoenergyshift'][1]
+                if 'meshcutoff' in fdf.keys():
+                    self.mesh_cutoff_input.value = fdf['meshcutoff'][0]
+                    self.mesh_cutoff_units.value = fdf['meshcutoff'][1]
+                if 'xcfunctional' in fdf.keys():
+                    self.xc_input.value = fdf['xcfunctional'][0]
+                if 'xcauthors' in fdf.keys():
+                    self.author.value = fdf['xcauthors'][0]
+                if 'maxscfiterations' in fdf.keys():
+                    self.max_SCF_iterations_input.value = fdf['maxscfiterations'][0]
+                if 'dmmixingweight' in fdf.keys():
+                    self.mixing_weigth_input.value = fdf['dmmixingweight'][0]
+                if 'dmnumberpulay' in fdf.keys():
+                    self.number_pulay_input.value = fdf['dmnumberpulay'][0]
+                if 'spin' in fdf.keys():
+                    self.spin_input.value = fdf['spin'][0]
+                if 'kgridmonkhorstpack' in fdf.keys():
+                    self.kpts_options_input.value = 'Enter kgrid_Monkhorst_Pack'
+                    self.check_siesta_kpoints_input()
+                    self.k_1.value = fdf['kgridmonkhorstpack'][0][0]
+                    self.k_2.value = fdf['kgridmonkhorstpack'][0][1]
+                    self.k_3.value = fdf['kgridmonkhorstpack'][0][2]
+                    self.k_4.value = fdf['kgridmonkhorstpack'][1][0]
+                    self.k_5.value = fdf['kgridmonkhorstpack'][1][1]
+                    self.k_6.value = fdf['kgridmonkhorstpack'][1][2]
+                    self.k_7.value = fdf['kgridmonkhorstpack'][2][0]
+                    self.k_8.value = fdf['kgridmonkhorstpack'][2][1]
+                    self.k_9.value = fdf['kgridmonkhorstpack'][2][2]
 
-            fdf = read_fdf(filename) 
-            if 'paobasissize' in fdf.keys():
-                self.basis_set_input.value = fdf['paobasissize'][0]
-            if  'paoenergyshift' in fdf.keys():
-                self.energy_shift_input.value = fdf['paoenergyshift'][0]
-                self.energy_shift_units.value = fdf['paoenergyshift'][1]
-            if 'meshcutoff' in fdf.keys():
-                self.mesh_cutoff_input.value = fdf['meshcutoff'][0]
-                self.mesh_cutoff_units.value = fdf['meshcutoff'][1]
-            if 'xcfunctional' in fdf.keys():
-                self.xc_input.value = fdf['xcfunctional'][0]
-            if 'xcauthors' in fdf.keys():
-                self.author.value = fdf['xcauthors'][0]
-            if 'maxscfiterations' in fdf.keys():
-                self.max_SCF_iterations_input.value = fdf['maxscfiterations'][0]
-            if 'dmmixingweight' in fdf.keys():
-                self.mixing_weigth_input.value = fdf['dmmixingweight'][0]
-            if 'dmnumberpulay' in fdf.keys():
-                self.number_pulay_input.value = fdf['dmnumberpulay'][0]
-            if 'spin' in fdf.keys():
-                self.spin_input.value = fdf['spin'][0]
-            if 'kgridmonkhorstpack' in fdf.keys():
-                self.kpts_options_input.value = 'Enter kgrid_Monkhorst_Pack'
-                self.check_siesta_kpoints_input()
-                self.k_1.value = fdf['kgridmonkhorstpack'][0][0]
-                self.k_2.value = fdf['kgridmonkhorstpack'][0][1]
-                self.k_3.value = fdf['kgridmonkhorstpack'][0][2]
-                self.k_4.value = fdf['kgridmonkhorstpack'][1][0]
-                self.k_5.value = fdf['kgridmonkhorstpack'][1][1]
-                self.k_6.value = fdf['kgridmonkhorstpack'][1][2]
-                self.k_7.value = fdf['kgridmonkhorstpack'][2][0]
-                self.k_8.value = fdf['kgridmonkhorstpack'][2][1]
-                self.k_9.value = fdf['kgridmonkhorstpack'][2][2]
-            
-
-
-        os.system(f"chmod 777 {filename}")
-        os.remove(filename)
+                os.system(f"chmod 777 {filename}")
+                os.remove(filename)
+                with self.errors_messages:
+                    clear_output(True)
+                    display(wg.HTML(value=''))
+            else:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Please be sure that uploaded file is in .fdf format.</b>. 
+                </div>
+                """
+                with self.errors_messages:
+                    clear_output(True)
+                    display(wg.HTML(value=warning))
+        except:
+            warning = f"""
+            <div class="alert alert-warning">
+            <b>Please be sure that uploaded file is in .fdf format.</b>. 
+            </div>
+            """
+            with self.errors_messages:
+                clear_output(True)
+                display(wg.HTML(value=warning))
 
     def download_fdf(self, aux):
         """
@@ -545,7 +569,8 @@ class Siesta(object):
         #job parameters
         self.n_processors = create_int_text(1,'')
         self.siesta_command = create_text_input('siesta','')
-        self.run_siesta_button = create_expanded_button('Run','Danger')
+        self.run_siesta_button = create_expanded_button('Run','success')
+        self.stop_siesta_button = create_expanded_button('Stop','Danger', disable = True)
 
 
 
@@ -582,10 +607,11 @@ class Siesta(object):
                                         HBox([self.available_calculations, self.available_actions]),
                                        HBox([Label('N° processors: '), self.n_processors]),
                                        HBox([Label('Siesta command: '), self.siesta_command]),
-                                      self.run_siesta_button,self.out_workflow],
+                                       HBox([self.run_siesta_button, self.stop_siesta_button]),self.out_workflow],
                                        layout = {'width':'max-content'})  
         
         self.run_siesta_button.on_click(self.launch_siesta_run)
+        self.stop_siesta_button.on_click(self.stop_siesta_run)
     
     def create_aditional_parameters_box(self):
 
@@ -779,18 +805,27 @@ PAO.SoftDefault false"""
             self.select_actions.options = option_list
             self.select_actions.value = [value]
       
-              
+    def stop_siesta_run(self, aux):
+        """
+        Stop current siesta calculations
+        """
+        if self.job_in_progress == True: 
+            os.system("killall siesta")
+
     def launch_siesta_run(self, aux):
         """
         Method for siesta job execution according to user's requirements
         """
-        
         os.environ['OMP_NUM_THREADS'] = "1"
+
+        
         try:
             folder = self.job_run_folder.value.split('/ ')[0]
         except:
             folder = './calculations'
         for calc in self.available_calculations.value:
+            with self.out_workflow:
+                clear_output(wait=True)
             self.siesta_label = calc
             self.root_directory = f'{folder}/{self.siesta_label}'
             self.structure_directory = f'{folder}/{self.siesta_label}/structure/'
@@ -830,52 +865,75 @@ PAO.SoftDefault false"""
             input_ = f'{siesta_label}.fdf'
             output = f'{siesta_label}.out'
             
-            # Get total energy
-            if (relax_structure != True) and (bands!= True) and (dos != True) and (opt != True):
-                with self.out_workflow:
+            self.job_in_progress = False
+
+            def f(relax_structure, bands, dos, opr, input_, output, siesta_label):
+                # Get total energy
+                if (relax_structure != True) and (bands!= True) and (dos != True) and (opt != True):
+                    self.job_in_progress = True
                     self.launch_siesta_total_energy(input_, output, siesta_label)
 
-            # Relax structure
-            if relax_structure == True:
-                with self.out_workflow :
+                # Relax structure
+                if relax_structure == True:
+                    self.job_in_progress = True
                     self.launch_relax_run(input_, output, siesta_label)
 
-            # Get band structure
-            if bands == True: 
-                with self.out_workflow :
+                # Get band structure
+                if bands == True: 
+                    self.job_in_progress = True
                     self.launch_bands_run(input_, output, siesta_label)
 
-            # Get density of states 
-            if dos == True:                
-                with self.out_workflow :
+                # Get density of states 
+                if dos == True: 
+                    self.job_in_progress = True  
                     self.launch_dos_run(input_, output, siesta_label)
-            
-            #Get optical results
-            if opt == True:         
-                with self.out_workflow :
+                
+                #Get optical results
+                if opt == True: 
+                    self.job_in_progress = True
                     self.launch_opt_run(input_, output, siesta_label)
+
+            thread = PropagatingThread(target=f, args=(relax_structure, bands,
+                                       dos, opt, input_, output, siesta_label))
+            result = thread.start()
+    
+                    
 
     def launch_siesta_total_energy(self,input_, output, siesta_label):
         """
         execute if any action is selected.
         """
-        
-        display(wg.HTML(value=f"{siesta_label}: Getting total energy..."))
+        with self.out_workflow:
+            display(wg.HTML(value=f"{siesta_label}: Getting total energy..."))
         change_system_relax_control(f"{self.structure_directory}{siesta_label}.fdf",
                            f"{self.structure_directory}", siesta_label)
 
         for pseudopotential in self.pseudopotentials:
             os.system(f"cp src/pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
-        os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
-        clear_output(wait=True)
-        display(wg.HTML(value="Done."))
+        
+
+        try:
+            os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
+            with self.out_workflow:
+                display(wg.HTML(value="Done."))
+        except:
+            with self.out_workflow:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Early stopping. The calculation has not finished correctly</b>. 
+                </div>
+                """
+                display(wg.HTML(value=warning))
+
+
                 
     def launch_relax_run(self,input_, output, siesta_label):
         """
         execute if relax is selected
         """
-        
-        display(wg.HTML(value=f"{siesta_label}: Relaxing Structure..."))
+        self.job_in_progress = True
+        with self.out_workflow:
+            display(wg.HTML(value=f"{siesta_label}: Relaxing Structure..."))
 
         for i in self.siesta_relax_inputs.split('\n'):
             try:
@@ -898,34 +956,46 @@ PAO.SoftDefault false"""
 
         for pseudopotential in self.pseudopotentials:
             os.system(f"cp src/pseudopotentials/{pseudopotential} {self.structure_directory}{pseudopotential}")
-        os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
-        clear_output(wait=True)
+
+        try:
+            os.system(f"cd {self.structure_directory} && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
+
+            check(self.structure_directory)
+            df = pd.read_csv(self.structure_directory + 'Status.csv')[['System','TotalEnergy','Status']]
+            if df['Status'][0] == 'False':
+                check_image = get_check_image("./src/images/check-failed.png", "png")
+                status = 'Unrelaxed'
+            else:
+                check_image = get_check_image("./src/images/check-success.png", "png")
+                status = 'Relaxed'
+            
+            output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
+            total_energy =  wg.HTML(value=f"<p><strong>{status} structure total energy: </strong>{df['TotalEnergy'][0]} eV</p>")
+            self.job_in_progress = False
+            with self.out_workflow:
+                display(wg.VBox([wg.HTML(value="<p><em><strong>Relax structure</strong></em>&nbsp;</p>"),
+                    wg.HBox([output, check_image]),
+                    total_energy])) 
         
+        except:
+            self.job_in_progress = False
+            with self.out_workflow:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Early stopping. The calculation has not finished correctly</b>. 
+                </div>
+                """
+                display(wg.HTML(value=warning))
 
         
-        #display(wg.HTML(value="Getting total energy..."))
-
-        check(self.structure_directory)
-        df = pd.read_csv(self.structure_directory + 'Status.csv')[['System','TotalEnergy','Status']]
-        if df['Status'][0] == 'False':
-            check_image = get_check_image("./src/images/check-failed.png", "png")
-            status = 'Unrelaxed'
-        else:
-            check_image = get_check_image("./src/images/check-success.png", "png")
-            status = 'Relaxed'
-        display(wg.HTML(value="<p><em><strong>Relax structure</strong></em>&nbsp;</p>"))
-        #display(wg.HTML(value="Done..."))
-        #display(wg.HTML(value="Checking output..."))
-        output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
-        display(wg.HBox([output, check_image]))  
-        total_energy =  wg.HTML(value=f"<p><strong>{status} structure total energy: </strong>{df['TotalEnergy'][0]} eV</p>")
-        display(total_energy)
         
     def launch_bands_run(self,input_, output, siesta_label):
         """
         execute if bands job is selected
         """
-        display(wg.HTML(value=f"{siesta_label}: Calculating bands Structure..."))
+        self.job_in_progress = True
+        with self.out_workflow:
+            display(wg.HTML(value=f"{siesta_label}: Calculating bands Structure..."))
         if os.path.isdir(f'{self.root_directory}/bands'):
             pass
         else:
@@ -945,24 +1015,48 @@ PAO.SoftDefault false"""
         os.system(f"cp {self.structure_directory}*.psf {self.root_directory}/bands/")
 
         os.system(f"echo '{self.siesta_bands_inputs}' >> {self.root_directory}/bands/{siesta_label}.fdf")
-        os.system(f"cd {self.root_directory}/bands/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
+        
+       
+        if True:
+            os.system(f"cd {self.root_directory}/bands/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
 
-        display(wg.HTML(value="<p><em><strong>Band structure</strong></em>&nbsp;</p>"))
+            try: 
+                fig, gap = self.get_bands_figure(siesta_label)
+                gap =  wg.HTML(value=f"<p><strong>structure Band Gap value: </strong>{gap}</p>")
+                check_image = get_check_image("./src/images/check-success.png", "png")
+                status = 'Ok'
+            except:
+                check_image = get_check_image("./src/images/check-failed.png", "png")
+                status = 'False'
 
-        try: 
-            fig, gap = self.get_bands_figure(siesta_label)
-            gap =  wg.HTML(value=f"<p><strong>structure Band Gap value: </strong>{gap}</p>")
-            check_image = get_check_image("./src/images/check-success.png", "png")
-            status = 'Ok'
-        except:
-            check_image = get_check_image("./src/images/check-failed.png", "png")
-            status = 'False'
+            output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
+            
+            if status == 'Ok':
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Band structure</strong></em>&nbsp;</p>"),
+                            wg.HBox([output, check_image]),gap])
+                with self.out_workflow:
+                    display(result)
+                    display(fig)
+            else:
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Band structure</strong></em>&nbsp;</p>"),
+                            wg.HBox([output, check_image])])  
+                with self.out_workflow:
+                    display(result)
 
-        output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
-        display(wg.HBox([output, check_image]))  
-        if status == 'Ok':
-            display(gap)
-            display(fig)
+            self.job_in_progress = False
+            
+        else:
+            self.job_in_progress = False
+            with self.out_workflow:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Early stopping. The calculation has not finished correctly</b>. 
+                </div>
+                """
+                display(wg.HTML(value=warning))
+
+
+
 
     def get_bands_figure(self, filename):
 
@@ -1051,7 +1145,9 @@ PAO.SoftDefault false"""
         """
         execute if DOS job is selected
         """
-        display(wg.HTML(value=f"{siesta_label}: Calculating Density of Sates..."))
+        self.job_in_progress = True
+        with self.out_workflow:
+            display(wg.HTML(value=f"{siesta_label}: Calculating Density of Sates..."))
         if os.path.isdir(f'{self.root_directory}/dos'):
             pass
         else:
@@ -1072,27 +1168,46 @@ PAO.SoftDefault false"""
         
 
         os.system(f"echo '{self.siesta_dos_inputs}' >> {self.root_directory}/dos/{siesta_label}.fdf")
-        os.system(f"cd {self.root_directory}/dos/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
-        #clear_output(wait=True)
-        #display(wg.HTML(value="Done..."))
-        #display(wg.HTML(value="Checking output..."))
-        display(wg.HTML(value="<p><em><strong>Density of States</strong></em>&nbsp;</p>"))
-        check(f"{self.root_directory}/dos/")
 
-        try: 
-            fig, eig = self.get_dos_figure(siesta_label)
-            fermi_energy =  wg.HTML(value=f"<p><strong>structure fermi energy: </strong>{eig} eV</p>")
-            check_image = get_check_image("./src/images/check-success.png", "png")
-            status = 'Ok'
+    
+        try:       
+            os.system(f"cd {self.root_directory}/dos/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
+            check(f"{self.root_directory}/dos/")
+
+            try: 
+                fig, eig = self.get_dos_figure(siesta_label)
+                fermi_energy =  wg.HTML(value=f"<p><strong>structure fermi energy: </strong>{eig} eV</p>")
+                check_image = get_check_image("./src/images/check-success.png", "png")
+                status = 'Ok'
+            except:
+                check_image = get_check_image("./src/images/check-failed.png", "png")
+                status = 'False'
+            
+            output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
+
+            if status == 'Ok':
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Density of States</strong></em>&nbsp;</p>"),
+                        wg.HBox([output, check_image]),fermi_energy])
+                with self.out_workflow:
+                    display(result)
+                    display(fig)
+            else:
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Density of States</strong></em>&nbsp;</p>"),
+                        wg.HBox([output, check_image])])
+                with self.out_workflow:
+                    display(result)
+            self.job_in_progress = False
+             
         except:
-            check_image = get_check_image("./src/images/check-failed.png", "png")
-            status = 'False'
+            self.job_in_progress = False
+            with self.out_workflow:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Early stopping. The calculation has not finished correctly</b>. 
+                </div>
+                """
+                display(wg.HTML(value=warning))
 
-        output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
-        display(wg.HBox([output, check_image]))  
-        if status == 'Ok':
-            display(fermi_energy)
-            display(fig)
         
     
     def get_dos_figure(self, filename):
@@ -1132,7 +1247,10 @@ PAO.SoftDefault false"""
         """
         execute if optical job is selected
         """
-        display(wg.HTML(value=f"{siesta_label}: Calculating Optical"))
+        self.job_in_progress = True
+        with self.out_workflow:
+            display(wg.HTML(value=f"{siesta_label}: Calculating Optical"))
+
         if os.path.isdir(f'{self.root_directory}/optical'):
             pass
         else:
@@ -1153,26 +1271,42 @@ PAO.SoftDefault false"""
         
 
         os.system(f"echo '{self.siesta_opt_inputs}' >> {self.root_directory}/optical/{siesta_label}.fdf")
-        os.system(f"cd {self.root_directory}/optical/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
-
-        #clear_output(wait=True)
-        #display(wg.HTML(value="Done..."))
-        #display(wg.HTML(value="Checking output..."))
-        display(wg.HTML(value="<p><em><strong>Optical calculation</strong></em>&nbsp;</p>"))
         
-        try: 
-            fig = self.get_opt_figure(siesta_label)
-            check_image = get_check_image("./src/images/check-success.png", "png")
-            status = 'Ok'
+        try:
+            os.system(f"cd {self.root_directory}/optical/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
+
+            try: 
+                fig = self.get_opt_figure(siesta_label)
+                check_image = get_check_image("./src/images/check-success.png", "png")
+                status = 'Ok'
+            except:
+                check_image = get_check_image("./src/images/check-failed.png", "png")
+                status = 'False'
+
+            output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
+            
+            if status == 'Ok':
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Optical calculation</strong></em>&nbsp;</p>"),
+                                wg.HBox([output, check_image])])
+                with self.out_workflow:
+                    display(result)
+                    display(fig)
+            else:
+                result = wg.VBox([wg.HTML(value="<p><em><strong>Optical calculation</strong></em>&nbsp;</p>"),
+                                wg.HBox([output, check_image])])
+                with self.out_workflow:
+                    display(result)
+            self.job_in_progress = False
+
         except:
-             check_image = get_check_image("./src/images/check-failed.png", "png")
-             status = 'False'
-
-        output = wg.HTML(value=f"<p><em><strong>System:</strong></em> {siesta_label}&nbsp; &nbsp; &nbsp;<strong>Status:&nbsp;</strong></p>")
-        display(wg.HBox([output, check_image]))  
-        if status == 'Ok':
-            display(fig)
-
+            self.job_in_progress = False
+            with self.out_workflow:
+                warning = f"""
+                <div class="alert alert-warning">
+                <b>Early stopping. The calculation has not finished correctly</b>. 
+                </div>
+                """
+                display(wg.HTML(value=warning))
 
     def get_opt_figure(self, filename):
 
@@ -1747,17 +1881,44 @@ class Postprocessing_graphs(wg.HBox):
         """
 
         if self.graph_type == 'Optical':
-            self.update_data_optical(change)
+            try:
+                self.update_data_optical(change)
+            except:
+                with self.output:
+                    warning = f"""
+                    <div class="alert alert-warning">
+                    <b>Something wrong. Please try again</b>. 
+                    </div>
+                    """
+                    display(wg.HTML(value=warning))
 
         if self.graph_type == 'Bands': 
-            self.update_data_bands(change)
+            try:
+                self.update_data_bands(change)
+            except:
+                with self.output:
+                    warning = f"""
+                    <div class="alert alert-warning">
+                    <b>Something wrong. Please try again</b>. 
+                    </div>
+                    """
+                    display(wg.HTML(value=warning))
 
         if self.graph_type == 'Dos' :
-            uploaded_file = self.upload_file.value
-            filename = next(iter(uploaded_file))
-            display(self.available_eigs)
-            self.available_eigs[filename.split('.DOS')[0]]
-            self.update_data_dos(change)
+            try:
+                uploaded_file = self.upload_file.value
+                filename = next(iter(uploaded_file))
+                display(self.available_eigs)
+                self.available_eigs[filename.split('.DOS')[0]]
+                self.update_data_dos(change)
+            except:
+                with self.output:
+                    warning = f"""
+                    <div class="alert alert-warning">
+                    <b>Something wrong. Please try again</b>. 
+                    </div>
+                    """
+                    display(wg.HTML(value=warning))
 
     def update_data_bands(self, change):
         """

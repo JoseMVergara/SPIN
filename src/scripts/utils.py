@@ -7,6 +7,7 @@ from re import compile
 from ase import Atoms
 from ase.utils import reader
 from ase.units import Bohr
+from threading import Thread
 
 def get_calculator_logo(path, format_):
     """
@@ -35,6 +36,29 @@ def get_check_image(path, format_):
         height=30,
     )
     return image_wg
+
+
+class PropagatingThread(Thread):
+    """
+    Catch thread exceptions when "stop" button is pressed
+    """
+    def run(self):
+        self.exc = None
+        try:
+            if hasattr(self, '_Thread__target'):
+                # Thread uses name mangling prior to Python 3.
+                self.ret = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
+            else:
+                self.ret = self._target(*self._args, **self._kwargs)
+        except BaseException as e:
+            self.exc = e
+            raise self.exc
+
+    def join(self, timeout=None):
+        super(PropagatingThread, self).join(timeout)
+        if self.exc:
+            raise self.exc
+        return self.ret
 
 def get_siesta_examples():
     """

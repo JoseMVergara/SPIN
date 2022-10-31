@@ -591,11 +591,20 @@ class Spin(Siesta):
         self.IS_MOLECULE = False
 
         #Create Structure
-        self.predefined_structure = bulk(self.name.value, crystalstructure=self.crystalstructure.value, a=self.avalue, 
-                             b=self.bvalue, c=self.cvalue,alpha=self.alphavalue,covera= self.coveravalue, 
-                             u=self.uvalue, orthorhombic=self.orthorhombic.value, cubic=self.cubic.value)
+        try:
+            self.predefined_structure = bulk(self.name.value, crystalstructure=self.crystalstructure.value, a=self.avalue, 
+                                b=self.bvalue, c=self.cvalue,alpha=self.alphavalue,covera= self.coveravalue, 
+                                u=self.uvalue, orthorhombic=self.orthorhombic.value, cubic=self.cubic.value)
 
-        self.update_content_with_predefined_structure()
+            self.update_content_with_predefined_structure()
+        except Exception as error:
+            warning = f"""
+            <div class="alert alert-warning">
+            <b>{error}.</b>. 
+            </div>
+            """
+            with self.structure_parameters:
+                display(wg.HTML(value=warning))
 
     def make_nanotube_with_buckling(self):
         """
@@ -681,13 +690,23 @@ class Spin(Siesta):
 
         atom1 = (0.0,0.0,5.0)
         atom2 = (bond,0.0,5 + buckling)
-        atomsR, unitCell = Nanotube(bond, a1, a2, atom1, atom2,self.n_w.value,self.m_w.value,False)
-        self.predefined_structure = Atoms(symbol + str(np.shape(atomsR)[0]),
-                                            positions = atomsR)
-        self.predefined_structure.cell = [[30,0,0],[0,30,0],[0,0,20]]
-        self.predefined_structure.center()
-        self.update_content_with_predefined_structure()
-        
+        try:
+            atomsR, unitCell = Nanotube(bond, a1, a2, atom1, atom2,self.n_w.value,self.m_w.value,False)
+            self.predefined_structure = Atoms(symbol + str(np.shape(atomsR)[0]),
+                                                positions = atomsR)
+            self.predefined_structure.cell = [[30,0,0],[0,30,0],[0,0,20]]
+            self.predefined_structure.center()
+            self.update_content_with_predefined_structure()
+        except Exception as error:
+            warning = f"""
+            <div class="alert alert-warning">
+            <b>{error}.</b>. 
+            </div>
+            """
+            with self.structure_parameters:
+                display(wg.HTML(value=warning))
+
+            
             
     def generate_nanotube(self,aux):
         """
@@ -699,14 +718,25 @@ class Spin(Siesta):
         if self.vacuum_wo.value == 'None':
             self.vacuumvalue = None
         else:
-            self.vacuumvalue = float(self.vacuum.value)
+            self.vacuumvalue = float(self.vacuum_wo.value)
 
-        self.predefined_structure = ase_nanotube(n = self.n_wo.value, m = self.m_wo.value,
-                                        length=self.length_wo.value, bond=self.bond_wo.value,
-                                        symbol=self.symbol_wo.value, vacuum = self.vacuumvalue)
-        self.predefined_structure.cell = [[30,0,0],[0,30,0],[0,0,20]]
-        self.predefined_structure.center()
-        self.update_content_with_predefined_structure()
+        try:
+            self.predefined_structure = ase_nanotube(n = self.n_wo.value, m = self.m_wo.value,
+                                            length=self.length_wo.value, bond=self.bond_wo.value,
+                                            symbol=self.symbol_wo.value, vacuum = self.vacuumvalue)
+            self.predefined_structure.cell = [[30,0,0],[0,30,0],[0,0,20]]
+            self.predefined_structure.center()
+            self.update_content_with_predefined_structure()
+
+        except Exception as error:
+            warning = f"""
+            <div class="alert alert-warning">
+            <b>{error}.</b>. 
+            </div>
+            """
+            with self.structure_parameters:
+                display(wg.HTML(value=warning))
+
 
             
     def make_graphene_nanoribons(self):
@@ -752,16 +782,26 @@ class Spin(Siesta):
             self.vacuumvalue = None
         else:
             self.vacuumvalue = float(self.vacuum_g_n.value)
-            
-        self.predefined_structure = graphene_nanoribbon(n=self.n_g_n.value, m=self.m_g_n.value, type=self.type_g_n.value,
-                                             saturated=self.saturated_g_n.value, C_H=self.C_H_g_n.value,
-                                             C_C=self.C_C_g_n.value, vacuum=self.vacuumvalue,
-                                             magnetic=self.magnetic_g_n.value, initial_mag=self.initial_mag_g_n.value,
-                                         sheet=self.sheet_g_n.value)
-        self.predefined_structure.center()
-        self.predefined_structure.cell = [[15,0,0],[0,15,0],[0,0,15]]
-        self.predefined_structure.center()
-        self.update_content_with_predefined_structure()
+        
+        try:
+            self.predefined_structure = graphene_nanoribbon(n=self.n_g_n.value, m=self.m_g_n.value, type=self.type_g_n.value,
+                                                saturated=self.saturated_g_n.value, C_H=self.C_H_g_n.value,
+                                                C_C=self.C_C_g_n.value, vacuum=self.vacuumvalue,
+                                                magnetic=self.magnetic_g_n.value, initial_mag=self.initial_mag_g_n.value,
+                                            sheet=self.sheet_g_n.value)
+            self.predefined_structure.center()
+            self.predefined_structure.cell = [[15,0,0],[0,15,0],[0,0,15]]
+            self.predefined_structure.center()
+            self.update_content_with_predefined_structure()
+        except Exception as error:
+            warning = f"""
+            <div class="alert alert-warning">
+            <b>{error}.</b>. 
+            </div>
+            """
+            with self.structure_parameters:
+                display(wg.HTML(value=warning))
+
         
           
 
@@ -811,50 +851,64 @@ class Spin(Siesta):
             update_content = True
         except:
             pass
-            
-        datos = ipysheet.to_dataframe(self.sheet1)
-        unit_cell = ipysheet.to_dataframe(self.sheet2)
-        atoms = Atoms(symbols=datos.Atom.to_list(), positions=datos[['Atomic coordinate x (Å)','Atomic coordinate y (Å)','Atomic coordinate z (Å)']].values, pbc = False)
-        atoms.set_positions(datos[['Atomic coordinate x (Å)','Atomic coordinate y (Å)','Atomic coordinate z (Å)']].values, apply_constraint = False)
-        atoms.set_cell(cell = unit_cell[['Lattice vector x (Å)','Lattice vector y (Å)','Lattice vector z (Å)']].values, scale_atoms=False, apply_constraint=False)    
 
-        if update_content == False:
+        try: 
+            datos = ipysheet.to_dataframe(self.sheet1)
+            unit_cell = ipysheet.to_dataframe(self.sheet2)
+            atoms = Atoms(symbols=datos.Atom.to_list(), positions=datos[['Atomic coordinate x (Å)','Atomic coordinate y (Å)','Atomic coordinate z (Å)']].values, pbc = False)
+            atoms.set_positions(datos[['Atomic coordinate x (Å)','Atomic coordinate y (Å)','Atomic coordinate z (Å)']].values, apply_constraint = False)
+            atoms.set_cell(cell = unit_cell[['Lattice vector x (Å)','Lattice vector y (Å)','Lattice vector z (Å)']].values, scale_atoms=False, apply_constraint=False)    
 
-            write('temp.xyz', atoms)
-            content = ''
-            with open('./temp.xyz', 'r') as file:
-                content = file.read()
-            
-            content = self.convert_any_format_to_cif([{'temp.xyz':{'name':'Prueba.xyz',
-                                    'type':'type_',
-                                    'size':'size',
-                                    'lastModified':'lastModified',
-                                    'content':bytes(content, 'utf-8')}}, 'temp.xyz','extxyz'])
-            filename = 'temp.extxyz'
+            if update_content == False:
 
-        else:
-            write('temp.cif', atoms)
-            content = ''
-            
-            with open('temp.cif', 'r') as file:
-                content = file.read()
-            filename = 'structure.cif'
-    
-        self.structure_input = Simulated_structure(content, filename = filename)
-        uploaded_file = self.structure_input.value
-        filename = next(iter(uploaded_file))
-        self.structure_input.value[filename]['content'] = str.encode(content)
-        self.structure_from_file = False
-        self.show_labels({'new':self.show_structure_labels})
-        with self.out:
-            clear_output(True)
-            self.structure_viewer = Viewer('structure',content,
-            [self.show_structure_labels,self.viewer_style,self.visualizer ],format_= filename.split(".")[-1])
-            if self.visualizer == 'Py3Dmol':
-                x = HTML(self.structure_viewer.build_viewer())
+                write('temp.xyz', atoms)
+                content = ''
+                with open('./temp.xyz', 'r') as file:
+                    content = file.read()
+                
+                content = self.convert_any_format_to_cif([{'temp.xyz':{'name':'Prueba.xyz',
+                                        'type':'type_',
+                                        'size':'size',
+                                        'lastModified':'lastModified',
+                                        'content':bytes(content, 'utf-8')}}, 'temp.xyz','extxyz'])
+                filename = 'temp.extxyz'
+
             else:
-                x = self.structure_viewer.build_viewer()
-            display(x)
+                write('temp.cif', atoms)
+                content = ''
+                
+                with open('temp.cif', 'r') as file:
+                    content = file.read()
+                filename = 'structure.cif'
+        
+            self.structure_input = Simulated_structure(content, filename = filename)
+            uploaded_file = self.structure_input.value
+            filename = next(iter(uploaded_file))
+            self.structure_input.value[filename]['content'] = str.encode(content)
+            self.structure_from_file = False
+            self.show_labels({'new':self.show_structure_labels})
+            with self.out:
+                clear_output(True)
+                self.structure_viewer = Viewer('structure',content,
+                [self.show_structure_labels,self.viewer_style,self.visualizer ],format_= filename.split(".")[-1])
+                if self.visualizer == 'Py3Dmol':
+                    x = HTML(self.structure_viewer.build_viewer())
+                else:
+                    x = self.structure_viewer.build_viewer()
+                display(x)
+        except:
+            warning = """
+            <div class="alert alert-danger">
+            <b>Something wrong when creating or updating structure. Please try again.</b>. 
+            </div>
+            """
+            with self.structure_parameters:
+                display(wg.HTML(value=warning))
+
+            with self.out:
+                #display('Something wrong when creating or updating structure. Please try again.')
+                display(wg.HTML(value=warning))
+
 
 
 

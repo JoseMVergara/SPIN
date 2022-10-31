@@ -1,0 +1,90 @@
+#####################################
+#       Parallel options            #
+#    BlockSize   32                 #
+#    ProcessorY  16                 #
+#   DiagMemory  1                   #
+#   TryMemoryIncrease  true         #
+#   DiagScale   1                   #
+#   ParallelOverK      false        #
+#######################################
+#####################################
+#       General Options             #
+  UseSaveData	     False	        #	
+  WriteCoorInital    false          #
+  WriteCoorStep      false          #
+  WriteForces	     false          #
+  WriteKpoints	     false          #
+  WriteEigenvalues   false          #
+  WriteKbands	     false          #
+  WriteBands	     false          #
+  WriteMullikenPop   0              #
+  WriteDM	     true               #
+  WriteCoorXmol	    false           #
+  WriteCoorCerius    false          #
+  WriteMDXmol	     false          #
+  WriteMDhistory     false          #
+  WriteDenchar       true           #
+  SaveRHO            true           #
+#  WriteDenchar       true          #
+#  COOP.Write         true          #
+#  SaveElectrostaticPotential true  #
+#####################################
+SystemLabel      Graphene
+SystemName       Graphene
+NumberOfAtoms    2
+NumberOfSpecies  1
+%block ChemicalSpeciesLabel
+1  6  C-gga
+%endblock ChemicalSpeciesLabel
+#---------------------------------------------------------------------------------------------
+#    DFT   Calcule Control
+#---------------------------------------------------------------------------------------------
+PAO.BasisSize     SZP
+PAO.EnergyShift   0.02 Ry
+XC.functional     GGA
+XC.authors        PBE
+MaxSCFIterations  150
+MeshCutoff        250  Ry
+DM.MixingWeight   0.1
+DM.Tolerance      1.000E-4
+DM.NumberPulay    5
+SolutionMethod    diagon
+ElectronicTemperature  25.86  meV
+Spin    non-polarized
+%block kgrid_Monkhorst_Pack
+        81    0     0     0.0
+        0    81     0     0.0
+        0    0     1     0.0
+%endblock kgrid_Monkhorst_Pack
+#----------------------------------------------------------------------------------------------
+#     System  Relax Control
+#----------------------------------------------------------------------------------------------
+MD.TypeOfRun FIRE
+MD.NumCGsteps  0
+MD.VariableCell  .False.
+MD.MaxForceTol    0.04 eV/Ang
+#-----------------------------------------------------------------------------------------------
+# Geometric  structure
+#-----------------------------------------------------------------------------------------------
+LatticeConstant 1.0 Ang
+AtomicCoordinatesFormat Ang
+AtomCoorFormatOut  Ang
+%block LatticeVectors
+        2.488326    0.203957    0.000000
+       -1.418515    2.050507   -0.000000
+        0.000000   -0.000000   14.998152
+%endblock LatticeVectors
+AtomicCoordinatesFormat NotScaledCartesianAng
+%block AtomicCoordinatesAndAtomicSpecies
+   -0.28736670    0.23396901    0.00000001   1       1  C-gga
+    0.89847509    1.05297335    0.00000001   1       2  C-gga
+%endblock AtomicCoordinatesAndAtomicSpecies
+BandLinesScale ReciprocalLatticeVectors
+ %block Bandlines
+  1   0.5000000000   0.000000000   0.0000   M
+ 300 0.0000000000   0.000000000   0.0000   \Gamma
+ 300   0.3333333333   0.333333333   0.0000   K
+ 300  0.5000000000   0.500000000   0.0000   M
+%endblock BandLines
+ WriteKbands false
+ WriteBands false
