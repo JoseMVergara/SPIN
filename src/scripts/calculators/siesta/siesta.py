@@ -1017,7 +1017,7 @@ PAO.SoftDefault false"""
         os.system(f"echo '{self.siesta_bands_inputs}' >> {self.root_directory}/bands/{siesta_label}.fdf")
         
        
-        if True:
+        try:
             os.system(f"cd {self.root_directory}/bands/ && mpirun -np {self.n_processors.value} {self.siesta_command.value} < {input_} > {output}")
 
             try: 
@@ -1045,7 +1045,7 @@ PAO.SoftDefault false"""
 
             self.job_in_progress = False
             
-        else:
+        except:
             self.job_in_progress = False
             with self.out_workflow:
                 warning = f"""

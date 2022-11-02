@@ -70,15 +70,15 @@ LatticeConstant 1.0 Ang
 AtomicCoordinatesFormat Ang
 AtomCoorFormatOut  Ang
 %block LatticeVectors
-        2.488326    0.203956   -0.000000
+        2.488327    0.203957    0.000000
        -1.418515    2.050508    0.000000
-       -0.000000    0.000001   14.998152
+        0.000000    0.000000   14.998152
 %endblock LatticeVectors
 
 AtomicCoordinatesFormat NotScaledCartesianAng
 %block AtomicCoordinatesAndAtomicSpecies
-   -0.28736768    0.23396976   -0.00000032   1       1  C-gga
-    0.89847215    1.05297398   -0.00000008   1       2  C-gga
+   -0.28736650    0.23396886   -0.00000000   1       1  C-gga
+    0.89847545    1.05297421   -0.00000000   1       2  C-gga
 %endblock AtomicCoordinatesAndAtomicSpecies
 
 BandLinesScale ReciprocalLatticeVectors
