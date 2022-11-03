@@ -1639,7 +1639,7 @@ class Postprocessing_graphs(wg.HBox):
         self.output = widgets.Output() 
 
         #init figure
-        self.fig, self.ax = plt.subplots(constrained_layout=True, figsize=(5, 3.5))
+        self.fig, self.ax = plt.subplots(constrained_layout=True, figsize=(7, 9.5))
         self.graph_type = graph_type
         self.ax.grid(False)
         plt.close(self.fig)

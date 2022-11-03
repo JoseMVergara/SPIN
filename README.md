@@ -51,6 +51,9 @@ To run the program, please intance a jupyter notebook, run in command line:
 
 then, open and execute [__SPIN_GUI.ipynb__](https://github.com/JoseMVergara/SPIN/blob/main/SPIN-GUI.ipynb).
 
+> **Warning**
+> For today's correct functionality of all the features available in SPIN, it is recommended to use __jupyter notebook__ instead of __jupyter lab__.
+
 ## Usage
 
  DFT calculations requires some insight from the user on how the algorithm should treat the problem, e.g, which operators or parameters are appropriate or when is convergence achieved. In the following we shall discuss the different components in calculations in SPIN. This beta version include  the  three  basis  part  of  the SPIN to  do  DFT  calculations employed SIESTA  code, i.e,  Geometric structure, Configure (DFT  parameters) and Calculation (control workflow).
