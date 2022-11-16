@@ -1037,6 +1037,7 @@ PAO.SoftDefault false"""
                 with self.out_workflow:
                     display(result)
                     display(fig)
+                    fig.close()
             else:
                 result = wg.VBox([wg.HTML(value="<p><em><strong>Band structure</strong></em>&nbsp;</p>"),
                             wg.HBox([output, check_image])])  
@@ -1191,6 +1192,7 @@ PAO.SoftDefault false"""
                 with self.out_workflow:
                     display(result)
                     display(fig)
+                    fig.close()
             else:
                 result = wg.VBox([wg.HTML(value="<p><em><strong>Density of States</strong></em>&nbsp;</p>"),
                         wg.HBox([output, check_image])])
@@ -1291,6 +1293,7 @@ PAO.SoftDefault false"""
                 with self.out_workflow:
                     display(result)
                     display(fig)
+                    fig.close()
             else:
                 result = wg.VBox([wg.HTML(value="<p><em><strong>Optical calculation</strong></em>&nbsp;</p>"),
                                 wg.HBox([output, check_image])])
