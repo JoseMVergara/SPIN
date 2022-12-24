@@ -112,5 +112,9 @@ There are [some example calculations](https://github.com/JoseMVergara/SPIN/tree/
 
 SPIN project is currently in its __Beta__ version and is open to the general public.
 
+## Citing
+
+If the program was helpful in your research, please cite the article https://doi.org/10.1016/j.cpc.2022.108614
+
 ## Licensing
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/MIT).
